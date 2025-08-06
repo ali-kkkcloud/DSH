@@ -912,7 +912,7 @@
             <input type="text" id="apiKey" class="config-input" placeholder="Google Sheets API Key" />
             <input type="text" id="sheetId" class="config-input" placeholder="Google Sheet ID" 
                    value="1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg" />
-            <textarea id="ranges" class="config-input" rows="3" placeholder="Sheet Ranges (comma separated)">Sheet1!A:J,Sheet2!A:J,Sheet3!A:J</textarea>
+            <textarea id="ranges" class="config-input" rows="3" placeholder="Sheet Ranges (Optional - Auto-detected if empty)">Leave empty for auto-detection</textarea>
             
             <button class="config-btn" onclick="saveAPIConfig()">
                 <i class="fas fa-save"></i> Save Configuration
@@ -923,7 +923,8 @@
                 1. Go to <a href="https://console.developers.google.com/" target="_blank" style="color: #667eea;">Google Console</a><br>
                 2. Enable Google Sheets API<br>
                 3. Create API Key<br>
-                4. Make your sheet public or add API permissions
+                4. Make your sheet public or add API permissions<br><br>
+                <strong style="color: var(--success);">✨ AUTO-DETECTION:</strong> Leave ranges empty to automatically detect all sheet tabs!
             </div>
         </div>
     </div>

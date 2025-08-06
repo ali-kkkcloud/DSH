@@ -3,72 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infants Vehicle Dashboard - GitHub Edition</title>
+    <title>🚀 INFTRACK - Vehicle Control Center</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
         :root {
-            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --danger: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-            --info: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            /* Neon Colors */
+            --primary-neon: #00f5d4;
+            --secondary-neon: #9b5de5;
+            --accent-green: #06d6a0;
+            --accent-red: #ef476f;
+            --accent-yellow: #ffd23f;
+            --accent-blue: #2196f3;
             
-            --bg-primary: #0a0e27;
-            --bg-secondary: #161b33;
-            --bg-card: rgba(22, 27, 51, 0.95);
-            --bg-glass: rgba(22, 27, 51, 0.98);
+            /* Backgrounds */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #0f172a;
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --bg-glass-strong: rgba(255, 255, 255, 0.1);
+            --bg-dark: #1e1e2e;
+            
+            /* Text */
             --text-primary: #ffffff;
-            --text-secondary: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.1);
-            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-            --shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            --blur: blur(16px);
+            --text-secondary: #a1a1aa;
+            --text-accent: var(--primary-neon);
             
-            --status-active: #10b981;
-            --status-active-bg: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-            --status-offline: #ef4444;
-            --status-offline-bg: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-            --status-aligned: #3b82f6;
-            --status-aligned-bg: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-            --status-misaligned: #f59e0b;
-            --status-misaligned-bg: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-            
-            --issue-glow: 0 0 20px rgba(239, 68, 68, 0.4);
-            --success-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+            /* Effects */
+            --neon-glow: 0 0 20px var(--primary-neon);
+            --neon-glow-strong: 0 0 40px var(--primary-neon);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --blur-effect: blur(16px);
         }
 
-        [data-theme="light"] {
-            --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg-secondary: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.95);
-            --bg-glass: rgba(255, 255, 255, 0.98);
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border: rgba(148, 163, 184, 0.2);
-            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-        }
-
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             color: var(--text-primary);
-            line-height: 1.6;
             overflow-x: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, var(--secondary-neon) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--primary-neon) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, var(--accent-green) 0%, transparent 50%);
+            opacity: 0.1;
+            animation: backgroundPulse 8s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* Glassmorphism Container */
+        .glass-container {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-effect);
+            border: var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-glass);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
         }
 
         /* API CONFIG MODAL */
@@ -79,7 +104,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -87,46 +112,59 @@
         }
 
         .config-content {
-            background: var(--bg-glass);
+            background: var(--bg-glass-strong);
+            backdrop-filter: var(--blur-effect);
             padding: 40px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-hover);
+            border-radius: 25px;
+            border: var(--glass-border);
+            box-shadow: var(--shadow-glass), var(--neon-glow);
             max-width: 600px;
             width: 90%;
+            animation: modalSlideIn 0.5s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
 
         .config-title {
-            background: var(--primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary-neon);
             font-size: 2rem;
             font-weight: 900;
             text-align: center;
             margin-bottom: 20px;
+            text-shadow: var(--neon-glow);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 20px var(--primary-neon); }
+            50% { text-shadow: 0 0 30px var(--primary-neon), 0 0 40px var(--primary-neon); }
         }
 
         .config-input {
             width: 100%;
             padding: 15px 20px;
             margin: 10px 0;
-            border: 2px solid var(--border);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            background: var(--bg-card);
+            background: var(--bg-glass);
             color: var(--text-primary);
             font-size: 14px;
+            font-family: 'Outfit', sans-serif;
             transition: all 0.3s ease;
+            backdrop-filter: var(--blur-effect);
         }
 
         .config-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.3);
         }
 
         .config-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
             color: white;
             border: none;
             padding: 15px 30px;
@@ -136,11 +174,29 @@
             transition: all 0.3s ease;
             width: 100%;
             margin-top: 20px;
+            font-family: 'Outfit', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .config-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .config-btn:hover::before {
+            left: 100%;
         }
 
         .config-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.4);
         }
 
         /* LOADING OVERLAY */
@@ -150,8 +206,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
             z-index: 1500;
             display: flex;
             flex-direction: column;
@@ -161,13 +217,14 @@
         }
 
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(0, 245, 212, 0.3);
+            border-top: 4px solid var(--primary-neon);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            animation: spin 1s linear infinite, colorShift 3s ease-in-out infinite;
+            margin-bottom: 30px;
+            box-shadow: var(--neon-glow);
         }
 
         @keyframes spin {
@@ -175,24 +232,44 @@
             100% { transform: rotate(360deg); }
         }
 
+        @keyframes colorShift {
+            0%, 100% { border-top-color: var(--primary-neon); }
+            50% { border-top-color: var(--secondary-neon); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-neon);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .loading-status {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
         /* SPEED INDICATOR */
         .speed-indicator {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: var(--success);
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-neon));
             color: white;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 25px;
             font-size: 12px;
             font-weight: 700;
             z-index: 1000;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            animation: pulse 2s infinite;
+            box-shadow: var(--neon-glow);
+            animation: statusPulse 2s infinite;
+            backdrop-filter: var(--blur-effect);
+            border: var(--glass-border);
         }
 
-        @keyframes pulse {
+        @keyframes statusPulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
@@ -201,21 +278,20 @@
             max-width: 1800px;
             margin: 0 auto;
             padding: 20px;
-            position: relative;
         }
 
-        /* MODERN HEADER */
+        /* FUTURISTIC HEADER */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding: 25px 35px;
+            padding: 30px 40px;
             background: var(--bg-glass);
-            backdrop-filter: var(--blur);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
+            backdrop-filter: var(--blur-effect);
+            border: var(--glass-border);
+            border-radius: 25px;
+            box-shadow: var(--shadow-glass);
             position: relative;
             overflow: hidden;
         }
@@ -226,20 +302,26 @@
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            z-index: -1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon), var(--primary-neon));
+            animation: headerGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes headerGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
         .header h1 {
-            background: var(--primary);
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 2.5rem;
-            font-weight: 900;
-            letter-spacing: -0.03em;
-            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            text-shadow: var(--neon-glow);
+            letter-spacing: -0.02em;
+            position: relative;
         }
 
         .header-controls {
@@ -248,40 +330,55 @@
             align-items: center;
         }
 
-        .theme-toggle, .refresh-btn, .config-toggle {
-            background: var(--bg-card);
-            backdrop-filter: var(--blur);
+        .control-btn {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-effect);
             color: var(--text-primary);
-            border: 1px solid var(--border);
+            border: var(--glass-border);
             padding: 12px 20px;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .theme-toggle:hover, .refresh-btn:hover, .config-toggle:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--shadow-hover);
-            background: var(--primary);
-            color: white;
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+            opacity: 0.3;
+            transition: left 0.5s;
         }
 
-        /* BEAUTIFUL TABS */
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.4);
+            color: var(--primary-neon);
+            border-color: var(--primary-neon);
+        }
+
+        .control-btn:hover::before {
+            left: 100%;
+        }
+
+        /* DYNAMIC TABS */
         .tabs {
             display: flex;
             margin-bottom: 30px;
             background: var(--bg-glass);
-            backdrop-filter: var(--blur);
-            border-radius: 20px;
-            padding: 6px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            backdrop-filter: var(--blur-effect);
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: var(--shadow-glass);
+            border: var(--glass-border);
             overflow-x: auto;
-            scrollbar-width: none;
             position: relative;
         }
 
@@ -289,55 +386,77 @@
 
         .tab {
             flex-shrink: 0;
-            padding: 15px 20px;
+            padding: 15px 25px;
             background: transparent;
             border: none;
-            border-radius: 15px;
+            border-radius: 18px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-secondary);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             white-space: nowrap;
-            z-index: 2;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            opacity: 0;
+            border-radius: 18px;
+            transition: opacity 0.3s ease;
+            z-index: -1;
         }
 
         .tab.active {
-            background: var(--primary);
             color: white;
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .tab.active::before {
+            opacity: 1;
+            box-shadow: var(--neon-glow);
+        }
+
+        .tab:hover {
+            color: var(--primary-neon);
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
 
         .tab-content { 
             display: none; 
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeInUp 0.6s ease-out;
         }
         .tab-content.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* STUNNING STATS GRID */
+        /* MEGA STATS GRID */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
-            margin-bottom: 35px;
+            margin-bottom: 40px;
         }
 
         .stat-card {
             background: var(--bg-glass);
-            backdrop-filter: var(--blur);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
+            backdrop-filter: var(--blur-effect);
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: var(--shadow-glass);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid var(--border);
+            border: var(--glass-border);
             position: relative;
             overflow: hidden;
         }
@@ -352,136 +471,240 @@
             transition: all 0.3s ease;
         }
 
-        .stat-card.total::before { background: var(--primary); }
-        .stat-card.active::before { background: var(--status-active-bg); }
-        .stat-card.aligned::before { background: var(--status-aligned-bg); }
-        .stat-card.misaligned::before { background: var(--status-misaligned-bg); }
-        .stat-card.offline::before { background: var(--status-offline-bg); }
-        .stat-card.health::before { background: var(--info); }
+        .stat-card.total::before { background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon)); }
+        .stat-card.active::before { background: linear-gradient(90deg, var(--accent-green), var(--primary-neon)); }
+        .stat-card.aligned::before { background: linear-gradient(90deg, var(--accent-blue), var(--primary-neon)); }
+        .stat-card.misaligned::before { background: linear-gradient(90deg, var(--accent-yellow), var(--accent-red)); }
+        .stat-card.offline::before { background: linear-gradient(90deg, var(--accent-red), #ff4757); }
+        .stat-card.health::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-blue)); }
 
         .stat-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-hover);
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: var(--shadow-glass), 0 20px 40px rgba(0, 245, 212, 0.2);
         }
 
         .stat-card:hover::before {
-            height: 8px;
+            height: 6px;
+            box-shadow: 0 0 20px currentColor;
         }
 
         .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
             color: white;
-            margin-bottom: 15px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 20px;
+            transition: all 0.4s ease;
+            position: relative;
         }
 
-        .stat-card.total .stat-icon { background: var(--primary); }
-        .stat-card.active .stat-icon { background: var(--status-active-bg); }
-        .stat-card.aligned .stat-icon { background: var(--status-aligned-bg); }
-        .stat-card.misaligned .stat-icon { background: var(--status-misaligned-bg); }
-        .stat-card.offline .stat-icon { background: var(--status-offline-bg); }
-        .stat-card.health .stat-icon { background: var(--info); }
+        .stat-card.total .stat-icon { 
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.5);
+        }
+        .stat-card.active .stat-icon { 
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-neon));
+            box-shadow: 0 0 20px rgba(6, 214, 160, 0.5);
+        }
+        .stat-card.aligned .stat-icon { 
+            background: linear-gradient(135deg, var(--accent-blue), var(--primary-neon));
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.5);
+        }
+        .stat-card.misaligned .stat-icon { 
+            background: linear-gradient(135deg, var(--accent-yellow), var(--accent-red));
+            box-shadow: 0 0 20px rgba(255, 210, 63, 0.5);
+        }
+        .stat-card.offline .stat-icon { 
+            background: linear-gradient(135deg, var(--accent-red), #ff4757);
+            box-shadow: 0 0 20px rgba(239, 71, 111, 0.5);
+        }
+        .stat-card.health .stat-icon { 
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            box-shadow: 0 0 20px rgba(6, 214, 160, 0.5);
+        }
 
         .stat-card:hover .stat-icon { 
-            transform: scale(1.2) rotate(10deg); 
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            transform: scale(1.15) rotate(5deg); 
+            box-shadow: 0 0 30px currentColor;
         }
 
         .stat-value {
-            font-size: 2.8rem;
+            font-size: 3.5rem;
             font-weight: 900;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: var(--text-primary);
             line-height: 1;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            position: relative;
         }
 
         .stat-label {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* ENHANCED CONTENT GRID */
-        .content-grid {
+        /* FLOATING SEARCH */
+        .floating-search {
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px 25px 18px 55px;
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-effect);
+            border: var(--glass-border);
+            border-radius: 30px;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.4s ease;
+            box-shadow: var(--shadow-glass);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary-neon);
+            box-shadow: var(--shadow-glass), 0 0 30px rgba(0, 245, 212, 0.3);
+            transform: scale(1.02);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-neon);
+            font-size: 20px;
+            animation: searchPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes searchPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* MISSION CONTROL GRID */
+        .mission-control {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 35px;
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
-        .section-card {
+        .control-panel {
             background: var(--bg-glass);
-            backdrop-filter: var(--blur);
-            border-radius: 20px;
+            backdrop-filter: var(--blur-effect);
+            border-radius: 25px;
             padding: 30px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-glass);
+            border: var(--glass-border);
+            transition: all 0.4s ease;
+            position: relative;
         }
 
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
+        .control-panel:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-glass), 0 20px 40px rgba(0, 245, 212, 0.1);
         }
 
-        .section-title {
-            font-size: 1.4rem;
+        .panel-title {
+            font-size: 1.6rem;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
+            position: relative;
         }
 
-        /* BEAUTIFUL LIST TOGGLES */
-        .list-toggle {
+        .panel-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-neon), transparent);
+            margin-left: 15px;
+        }
+
+        /* TOGGLE SWITCHES */
+        .control-toggle {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            background: var(--bg-card);
-            padding: 6px;
-            border-radius: 25px;
-            border: 1px solid var(--border);
+            gap: 10px;
+            margin-bottom: 25px;
+            background: var(--bg-dark);
+            padding: 8px;
+            border-radius: 20px;
+            border: var(--glass-border);
         }
 
-        .list-toggle-btn {
-            padding: 10px 18px;
+        .toggle-btn {
+            padding: 12px 20px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
-            border-radius: 20px;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            position: relative;
+            overflow: hidden;
         }
 
-        .list-toggle-btn.active {
-            background: var(--primary);
+        .toggle-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 15px;
+        }
+
+        .toggle-btn.active {
             color: white;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        /* ENHANCED ITEM LISTS WITH BETTER ISSUE HIGHLIGHTING */
-        .item-list {
-            max-height: 400px;
+        .toggle-btn.active::before {
+            opacity: 1;
+        }
+
+        .toggle-btn:hover {
+            color: var(--primary-neon);
+        }
+
+        /* ENHANCED LISTS */
+        .enhanced-list {
+            max-height: 450px;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
+            scrollbar-color: var(--primary-neon) transparent;
         }
 
-        .item-list::-webkit-scrollbar { width: 6px; }
-        .item-list::-webkit-scrollbar-thumb { 
-            background: var(--border); 
+        .enhanced-list::-webkit-scrollbar { width: 6px; }
+        .enhanced-list::-webkit-scrollbar-thumb { 
+            background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon)); 
             border-radius: 3px; 
         }
 
@@ -489,193 +712,324 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 20px;
-            margin-bottom: 12px;
-            background: var(--bg-card);
-            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            background: var(--bg-dark);
+            border-radius: 18px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 2px solid transparent;
             position: relative;
             overflow: hidden;
         }
 
-        .list-item:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateX(8px) scale(1.02);
-            box-shadow: var(--shadow-hover);
-        }
-
-        /* DRAMATIC ISSUE HIGHLIGHTING */
-        .list-item.has-issues { 
-            border: 2px solid var(--status-offline);
-            background: linear-gradient(135deg, 
-                rgba(239, 68, 68, 0.15) 0%, 
-                rgba(248, 113, 113, 0.1) 100%);
-            box-shadow: var(--issue-glow), var(--shadow);
-            animation: issueGlow 3s ease-in-out infinite;
-        }
-
-        .list-item.has-issues::before {
+        .list-item::before {
             content: '';
             position: absolute;
-            left: 0;
             top: 0;
-            bottom: 0;
-            width: 6px;
-            background: var(--status-offline-bg);
-            animation: issuePulse 2s ease-in-out infinite;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+            opacity: 0.1;
+            transition: left 0.5s;
         }
 
-        @keyframes issueGlow {
-            0%, 100% { box-shadow: var(--issue-glow), var(--shadow); }
-            50% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.6), var(--shadow-hover); }
+        .list-item:hover {
+            transform: translateX(10px) scale(1.02);
+            border-color: var(--primary-neon);
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.2);
         }
 
-        @keyframes issuePulse {
-            0%, 100% { opacity: 1; transform: scaleY(1); }
-            50% { opacity: 0.7; transform: scaleY(0.8); }
+        .list-item:hover::before {
+            left: 100%;
+        }
+
+        /* CRITICAL ISSUE HIGHLIGHTING */
+        .list-item.has-issues { 
+            border-color: var(--accent-red);
+            background: linear-gradient(135deg, 
+                rgba(239, 71, 111, 0.1) 0%, 
+                rgba(255, 71, 87, 0.05) 100%);
+            animation: criticalPulse 3s ease-in-out infinite;
+        }
+
+        .list-item.has-issues::after {
+            content: '⚠️';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            animation: warningBlink 2s infinite;
+        }
+
+        @keyframes criticalPulse {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(239, 71, 111, 0.3);
+                border-color: var(--accent-red);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(239, 71, 111, 0.5);
+                border-color: #ff4757;
+            }
+        }
+
+        @keyframes warningBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .item-name {
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .list-item.has-issues .item-name {
-            color: var(--status-offline);
-            font-weight: 800;
+            color: var(--accent-red);
         }
 
         .item-count {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
             color: white;
-            padding: 8px 15px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 800;
-            min-width: 35px;
+            min-width: 40px;
             text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.4);
+            position: relative;
         }
 
         .list-item.has-issues .item-count { 
-            background: var(--status-offline-bg);
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-            animation: countPulse 2s ease-in-out infinite;
+            background: linear-gradient(135deg, var(--accent-red), #ff4757);
+            box-shadow: 0 0 15px rgba(239, 71, 111, 0.5);
+            animation: countAlert 2s ease-in-out infinite;
         }
 
-        @keyframes countPulse {
+        @keyframes countAlert {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
 
-        .list-item:hover .item-count { 
-            background: white; 
-            color: #667eea; 
-            transform: scale(1.1);
-        }
-
-        /* ENHANCED CHARTS */
+        /* HOLOGRAPHIC CHARTS */
         .charts-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 35px;
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
         .chart-container {
             background: var(--bg-glass);
-            backdrop-filter: var(--blur);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            height: 450px;
+            backdrop-filter: var(--blur-effect);
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: var(--shadow-glass);
+            border: var(--glass-border);
+            height: 500px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon), var(--primary-neon));
+            border-radius: 25px 25px 0 0;
+            animation: chartGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes chartGlow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
         }
 
         .chart-container:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-glass), 0 25px 50px rgba(0, 245, 212, 0.2);
         }
 
         .chart-title {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--text-primary);
+            margin-bottom: 25px;
+            color: var(--primary-neon);
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
+            text-shadow: 0 0 10px var(--primary-neon);
         }
 
-        .heatmap-container, .monthly-container {
+        .chart-canvas {
             flex: 1;
             position: relative;
-            min-height: 350px;
+            min-height: 400px;
         }
 
-        /* SEARCH ENHANCEMENTS */
-        .search-box {
-            background: var(--bg-card);
-            border: 2px solid var(--border);
-            border-radius: 25px;
-            padding: 15px 25px;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto 25px;
-            display: block;
-            font-size: 14px;
+        /* STATUS BADGES */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-active { 
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-neon));
+            color: white;
+            box-shadow: 0 0 15px rgba(6, 214, 160, 0.4);
+        }
+
+        .status-offline { 
+            background: linear-gradient(135deg, var(--accent-red), #ff4757);
+            color: white;
+            box-shadow: 0 0 15px rgba(239, 71, 111, 0.4);
+            animation: dangerPulse 2s ease-in-out infinite;
+        }
+
+        .status-aligned { 
+            background: linear-gradient(135deg, var(--accent-blue), var(--primary-neon));
+            color: white;
+            box-shadow: 0 0 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .status-misaligned { 
+            background: linear-gradient(135deg, var(--accent-yellow), var(--accent-red));
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 210, 63, 0.4);
+            animation: warningPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes dangerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes warningPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1200px) {
+            .mission-control, .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 25px;
+            }
+            .header h1 { font-size: 2.2rem; text-align: center; }
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .stat-card { padding: 25px; }
+            .stat-value { font-size: 2.8rem; }
+            .chart-container { height: 400px; padding: 25px; }
+            .tabs { padding: 6px; }
+            .tab { padding: 12px 18px; font-size: 12px; }
+        }
+
+        /* SCROLLBAR STYLING */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { 
+            background: var(--bg-dark); 
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon)); 
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--primary-neon);
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: linear-gradient(135deg, var(--secondary-neon), var(--primary-neon)); 
+        }
+
+        /* FLOATING ELEMENTS */
+        .floating-status {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-effect);
             color: var(--text-primary);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: var(--blur);
-            font-weight: 500;
+            padding: 15px 25px;
+            border-radius: 25px;
+            border: var(--glass-border);
+            box-shadow: var(--shadow-glass);
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 100;
+            animation: floatingPulse 3s ease-in-out infinite;
         }
 
-        .search-box:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
-            transform: scale(1.02);
+        @keyframes floatingPulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
-        .search-box::placeholder {
-            color: var(--text-muted);
-            font-weight: 400;
+        .floating-refresh {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: var(--shadow-glass), 0 0 30px rgba(0, 245, 212, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
         }
 
-        /* ENHANCED MODALS */
+        .floating-refresh:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: var(--shadow-glass), 0 0 40px rgba(0, 245, 212, 0.6);
+        }
+
+        /* MODAL ENHANCEMENTS */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            animation: modalFadeIn 0.4s ease-out;
         }
 
         .modal-content {
             background: var(--bg-glass);
-            backdrop-filter: var(--blur);
+            backdrop-filter: var(--blur-effect);
             margin: 3% auto;
             padding: 40px;
             border-radius: 25px;
@@ -684,376 +1038,156 @@
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-hover);
-            animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes modalSlideIn {
-            from { transform: translateY(-50px) scale(0.9); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
+            border: var(--glass-border);
+            box-shadow: var(--shadow-glass), var(--neon-glow);
+            animation: modalSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .close {
             position: absolute;
-            right: 25px;
-            top: 25px;
+            right: 20px;
+            top: 20px;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
             color: var(--text-primary);
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-card);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-effect);
+            border: var(--glass-border);
+            transition: all 0.3s ease;
         }
 
         .close:hover {
-            background: var(--danger);
+            background: var(--accent-red);
             color: white;
             transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 20px rgba(239, 71, 111, 0.5);
         }
 
-        /* BEAUTIFUL TABLES */
+        /* TABLE STYLING */
         table {
             width: 100%;
             border-collapse: collapse;
-            background: var(--bg-card);
-            border-radius: 15px;
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-effect);
+            border-radius: 20px;
             overflow: hidden;
-            margin-top: 15px;
-            box-shadow: var(--shadow);
+            margin-top: 20px;
+            box-shadow: var(--shadow-glass);
+            border: var(--glass-border);
         }
 
         th, td {
-            padding: 15px 18px;
+            padding: 18px 22px;
             text-align: left;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.95rem;
         }
 
         th {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
             color: white;
             font-weight: 700;
             letter-spacing: 0.5px;
             font-size: 0.85rem;
             text-transform: uppercase;
+            position: relative;
+        }
+
+        th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
+            opacity: 0.8;
+        }
+
+        tr {
+            transition: all 0.3s ease;
         }
 
         tr:hover {
-            background: var(--bg-glass);
+            background: var(--bg-glass-strong);
             transform: scale(1.01);
-            transition: all 0.2s ease;
         }
 
-        /* ENHANCED STATUS BADGES */
-        .status-active { 
-            background: var(--status-active-bg);
-            color: white;
-            font-weight: 800;
-            padding: 6px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-            border: none;
-        }
-
-        .status-offline { 
-            background: var(--status-offline-bg);
-            color: white;
-            font-weight: 800;
-            padding: 6px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-            border: none;
-            animation: statusPulse 2s ease-in-out infinite;
-        }
-
-        .status-aligned { 
-            background: var(--status-aligned-bg);
-            color: white;
-            font-weight: 800;
-            padding: 6px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-            border: none;
-        }
-
-        .status-misaligned { 
-            background: var(--status-misaligned-bg);
-            color: white;
-            font-weight: 800;
-            padding: 6px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-            border: none;
-            animation: statusPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes statusPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(0.98); }
-        }
-
-        /* FLOATING ACTION BUTTON */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 100;
-        }
-
-        .fab:hover {
-            transform: scale(1.15) rotate(180deg);
-            box-shadow: var(--shadow-hover);
-        }
-
-        /* EXPORT BUTTONS */
-        .export-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .export-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .export-csv { 
-            background: var(--success); 
-            color: white; 
-            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
-        }
-
-        .export-pdf { 
-            background: var(--danger); 
-            color: white; 
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .export-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--shadow-hover);
-        }
-
-        /* FILTER ENHANCEMENTS */
-        .filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        select, input {
-            padding: 10px 15px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 13px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: var(--blur);
-            min-width: 120px;
-        }
-
-        select:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            transform: scale(1.02);
-        }
-
-        .last-updated {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            background: var(--bg-card);
-            padding: 6px 15px;
-            border-radius: 20px;
-            backdrop-filter: var(--blur);
-            border: 1px solid var(--border);
-        }
-
-        .filter-status {
-            background: var(--bg-glass);
-            padding: 10px 20px;
-            border-radius: 20px;
-            margin-right: 15px;
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-        }
-
-        /* MONTH FILTER STYLING */
-        .month-filter {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .month-filter label {
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .month-filter select {
-            min-width: 150px;
-        }
-
-        /* ERROR HANDLING */
-        .error-container {
-            background: var(--danger);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .error-container i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        /* RESPONSIVE DESIGN */
-        @media (max-width: 1024px) {
-            .content-grid, .charts-section {
-                grid-template-columns: 1fr;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 15px; }
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-                padding: 20px;
-            }
-            .header h1 { font-size: 2rem; }
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            .stat-card { padding: 20px; }
-            .stat-value { font-size: 2.2rem; }
-            .chart-container {
-                height: 350px;
-                padding: 20px;
-            }
-            .filters { flex-direction: column; }
-            .tabs { padding: 4px; }
-            .tab { padding: 10px 12px; font-size: 11px; }
-        }
-
-        /* SCROLLBAR STYLING */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-card); }
-        ::-webkit-scrollbar-thumb { 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            border-radius: 4px; 
-        }
-        ::-webkit-scrollbar-thumb:hover { 
-            background: linear-gradient(135deg, #764ba2, #667eea); 
-        }
-
-        /* LOADING ANIMATIONS */
+        /* LOADING STATES */
         .loading {
-            opacity: 0.7;
-            animation: loading 1.5s ease-in-out infinite;
+            opacity: 0.6;
+            animation: loadingPulse 1.5s ease-in-out infinite;
         }
 
-        @keyframes loading {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.8; }
         }
 
-        /* SINGLE CHART LAYOUT */
-        .single-chart {
-            grid-column: 1 / -1;
-            height: 500px;
+        /* ADDITIONAL EFFECTS */
+        .glow-effect {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 10px var(--primary-neon); }
+            50% { text-shadow: 0 0 20px var(--primary-neon), 0 0 30px var(--primary-neon); }
+        }
+
+        .scan-line {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scan-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.4), transparent);
+            animation: scanAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes scanAnimation {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
     </style>
 </head>
-<body data-theme="dark">
+<body>
     <!-- API Configuration Modal -->
     <div id="configModal" class="config-modal">
         <div class="config-content">
-            <h2 class="config-title">🔐 Setup Google Sheets API</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 20px; text-align: center;">
-                Enter your Google Sheets API credentials to connect to your live data
+            <h2 class="config-title">🔐 MISSION CONTROL SETUP</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px; text-align: center; font-weight: 500;">
+                Initialize Google Sheets API connection for live vehicle data streaming
             </p>
             
-            <input type="text" id="apiKey" class="config-input" placeholder="Google Sheets API Key" />
-            <input type="text" id="sheetId" class="config-input" placeholder="Google Sheet ID" 
+            <input type="text" id="apiKey" class="config-input" placeholder="🔑 Google Sheets API Key" />
+            <input type="text" id="sheetId" class="config-input" placeholder="📊 Google Sheet ID" 
                    value="1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg" />
-            <textarea id="ranges" class="config-input" rows="3" placeholder="Sheet Ranges (Optional - Auto-detected if empty)">Leave empty for auto-detection</textarea>
+            <textarea id="ranges" class="config-input" rows="3" placeholder="📋 Sheet Ranges (Auto-detected if empty)">Auto-detect all daily tabs</textarea>
             
             <button class="config-btn" onclick="saveAPIConfig()">
-                <i class="fas fa-save"></i> Save Configuration
+                <i class="fas fa-rocket"></i> INITIALIZE MISSION CONTROL
             </button>
             
-            <div style="margin-top: 20px; padding: 15px; background: var(--bg-card); border-radius: 12px; font-size: 12px; color: var(--text-muted);">
-                <strong>Setup Instructions:</strong><br>
-                1. Go to <a href="https://console.developers.google.com/" target="_blank" style="color: #667eea;">Google Console</a><br>
+            <div style="margin-top: 25px; padding: 20px; background: var(--bg-glass); border-radius: 15px; font-size: 13px; color: var(--text-secondary); border: var(--glass-border);">
+                <strong style="color: var(--primary-neon);">🚀 QUICK SETUP:</strong><br>
+                1. Access <a href="https://console.developers.google.com/" target="_blank" style="color: var(--primary-neon); text-decoration: none;">Google Console</a><br>
                 2. Enable Google Sheets API<br>
-                3. Create API Key<br>
-                4. Make your sheet public or add API permissions<br><br>
-                <strong style="color: var(--success);">✨ AUTO-DETECTION:</strong> Leave ranges empty to automatically detect all sheet tabs!
+                3. Generate API Key<br>
+                4. Configure sheet permissions<br><br>
+                <strong style="color: var(--accent-green);">✨ AUTO-DETECTION:</strong> System will automatically scan for daily tabs!
             </div>
         </div>
     </div>
@@ -1061,82 +1195,86 @@
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>
-        <h3>Loading Vehicle Data...</h3>
-        <p id="loadingStatus">Connecting to Google Sheets...</p>
+        <h3 class="loading-text">ACCESSING VEHICLE DATA</h3>
+        <p class="loading-status" id="loadingStatus">Establishing connection to mission control...</p>
     </div>
 
     <!-- Speed Indicator -->
-    <div class="speed-indicator" id="speedIndicator">⚡ Loading...</div>
+    <div class="speed-indicator" id="speedIndicator">⚡ SYSTEM INITIALIZING...</div>
 
     <div class="container">
-        <div class="header">
-            <h1>🚗 Infants Vehicle Dashboard</h1>
+        <!-- Futuristic Header -->
+        <header class="header">
+            <h1 class="glow-effect">🚀 INFTRACK</h1>
             <div class="header-controls">
-                <button class="refresh-btn" onclick="refreshData()">
-                    <i class="fas fa-sync-alt"></i> Refresh
+                <button class="control-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i> REFRESH
                 </button>
-                <button class="config-toggle" onclick="showConfig()">
-                    <i class="fas fa-cog"></i> Config
+                <button class="control-btn" onclick="showConfig()">
+                    <i class="fas fa-satellite-dish"></i> CONFIG
                 </button>
-                <button class="theme-toggle" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i> Light Mode
+                <button class="control-btn" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i> THEME
                 </button>
-                <div class="last-updated" id="lastUpdated"></div>
+                <div class="floating-status" id="lastUpdated" style="position: static; animation: none; font-size: 12px;">
+                    <i class="fas fa-satellite"></i> STANDBY
+                </div>
             </div>
-        </div>
+        </header>
 
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab(0)">
-                <i class="fas fa-tachometer-alt"></i> Dashboard Overview
+        <!-- Dynamic Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab active scan-line" onclick="switchTab(0)">
+                <i class="fas fa-rocket"></i> MISSION CONTROL
             </button>
             <button class="tab" onclick="switchTab(1)">
-                <i class="fas fa-calendar-check"></i> Monthly Analysis
+                <i class="fas fa-chart-line"></i> MONTHLY ANALYSIS
             </button>
             <button class="tab" onclick="switchTab(2)">
-                <i class="fas fa-users"></i> Client Report
+                <i class="fas fa-building"></i> CLIENT REPORT
             </button>
             <button class="tab" onclick="switchTab(3)">
-                <i class="fas fa-map-marked-alt"></i> Location Report
+                <i class="fas fa-map"></i> LOCATION REPORT
             </button>
             <button class="tab" onclick="switchTab(4)">
-                <i class="fas fa-analytics"></i> Executive Summary
+                <i class="fas fa-clipboard-list"></i> EXECUTIVE SUMMARY
             </button>
             <button class="tab" onclick="switchTab(5)">
-                <i class="fas fa-building"></i> Client Analytics
+                <i class="fas fa-users"></i> CLIENT ANALYTICS
             </button>
             <button class="tab" onclick="switchTab(6)">
-                <i class="fas fa-globe-americas"></i> Location Analytics
+                <i class="fas fa-globe"></i> LOCATION ANALYTICS
             </button>
-        </div>
+        </nav>
 
-        <!-- Dashboard Overview Tab -->
+        <!-- Mission Control Dashboard -->
         <div class="tab-content active" id="tab0">
-            <!-- Ultra Fast Search Bar -->
-            <div style="margin-bottom: 30px;">
-                <input type="text" class="search-box" id="dashboardSearchInput" 
-                       placeholder="🔍 Search vehicles, clients, locations, status..." 
-                       onkeyup="performDashboardSearch()">
-                <div class="filter-status" id="dashboardSearchStatus" style="margin-top: 15px; display: none;">
-                    <i class="fas fa-search"></i> Search results
+            <!-- Floating Search Interface -->
+            <div class="floating-search">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-box" id="dashboardSearchInput" 
+                           placeholder="Search vehicles, clients, locations, status..." 
+                           onkeyup="performDashboardSearch()">
                 </div>
             </div>
             
-            <!-- Search Results Table -->
-            <div id="searchResultsSection" style="display: none; margin-bottom: 30px;">
-                <div class="section-card">
-                    <h3 class="section-title">
-                        <i class="fas fa-search"></i> Search Results
+            <!-- Search Results -->
+            <div id="searchResultsSection" style="display: none; margin-bottom: 35px;">
+                <div class="control-panel">
+                    <h3 class="panel-title">
+                        <i class="fas fa-search-location"></i> SEARCH RESULTS
                     </h3>
-                    <div class="table-container">
-                        <table id="dashboardSearchTable">
+                    <div class="glass-container" style="padding: 0; border-radius: 15px;">
+                        <table id="dashboardSearchTable" style="margin: 0;">
                             <thead>
                                 <tr>
-                                    <th><i class="fas fa-car"></i> Vehicle</th>
-                                    <th><i class="fas fa-building"></i> Client</th>
-                                    <th><i class="fas fa-map-marker-alt"></i> Location</th>
-                                    <th><i class="fas fa-signal"></i> Status</th>
-                                    <th><i class="fas fa-align-center"></i> Alignment</th>
-                                    <th><i class="fas fa-calendar"></i> Date</th>
+                                    <th><i class="fas fa-car"></i> VEHICLE</th>
+                                    <th><i class="fas fa-building"></i> CLIENT</th>
+                                    <th><i class="fas fa-map-marker-alt"></i> LOCATION</th>
+                                    <th><i class="fas fa-signal"></i> STATUS</th>
+                                    <th><i class="fas fa-crosshairs"></i> ALIGNMENT</th>
+                                    <th><i class="fas fa-calendar"></i> DATE</th>
                                 </tr>
                             </thead>
                             <tbody id="dashboardSearchBody"></tbody>
@@ -1145,250 +1283,133 @@
                 </div>
             </div>
             
-            <div class="stats-grid" id="statsGrid">
-                <!-- Will be populated FAST -->
-            </div>
+            <!-- Mega Stats Grid -->
+            <section class="stats-grid" id="statsGrid">
+                <!-- Will be populated with live data -->
+            </section>
             
-            <div class="content-grid">
-                <div class="section-card">
-                    <h3 class="section-title">
-                        <i class="fas fa-building"></i> All Clients
+            <!-- Mission Control Panels -->
+            <div class="mission-control">
+                <div class="control-panel">
+                    <h3 class="panel-title">
+                        <i class="fas fa-building"></i> CLIENT OPERATIONS
                     </h3>
-                    <div class="list-toggle">
-                        <button class="list-toggle-btn active" onclick="toggleClientList('all')">
-                            <i class="fas fa-list"></i> All Clients
+                    <div class="control-toggle">
+                        <button class="toggle-btn active" onclick="toggleClientList('all')">
+                            <i class="fas fa-list"></i> ALL CLIENTS
                         </button>
-                        <button class="list-toggle-btn" onclick="toggleClientList('issues')">
-                            <i class="fas fa-exclamation-triangle"></i> Issues Only
+                        <button class="toggle-btn" onclick="toggleClientList('issues')">
+                            <i class="fas fa-exclamation-triangle"></i> CRITICAL ISSUES
                         </button>
                     </div>
-                    <div class="item-list" id="clientList">
-                        <!-- Will be populated FAST -->
+                    <div class="enhanced-list" id="clientList">
+                        <!-- Will be populated with live data -->
                     </div>
                 </div>
                 
-                <div class="section-card">
-                    <h3 class="section-title">
-                        <i class="fas fa-map-marker-alt"></i> All Locations
+                <div class="control-panel">
+                    <h3 class="panel-title">
+                        <i class="fas fa-map-marked-alt"></i> LOCATION NETWORK
                     </h3>
-                    <div class="list-toggle">
-                        <button class="list-toggle-btn active" onclick="toggleLocationList('all')">
-                            <i class="fas fa-list"></i> All Locations
+                    <div class="control-toggle">
+                        <button class="toggle-btn active" onclick="toggleLocationList('all')">
+                            <i class="fas fa-globe"></i> ALL LOCATIONS
                         </button>
-                        <button class="list-toggle-btn" onclick="toggleLocationList('issues')">
-                            <i class="fas fa-exclamation-triangle"></i> Issues Only
+                        <button class="toggle-btn" onclick="toggleLocationList('issues')">
+                            <i class="fas fa-exclamation-triangle"></i> CRITICAL ISSUES
                         </button>
                     </div>
-                    <div class="item-list" id="locationList">
-                        <!-- Will be populated FAST -->
+                    <div class="enhanced-list" id="locationList">
+                        <!-- Will be populated with live data -->
                     </div>
                 </div>
             </div>
 
+            <!-- Holographic Charts -->
             <div class="charts-section">
                 <div class="chart-container">
                     <h3 class="chart-title">
-                        <i class="fas fa-fire"></i> Current Month Issues
+                        <i class="fas fa-chart-area"></i> THREAT ANALYSIS
                     </h3>
-                    <div class="heatmap-container">
+                    <div class="chart-canvas">
                         <canvas id="heatmapChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
                     <h3 class="chart-title">
-                        <i class="fas fa-chart-pie"></i> Client Status Overview
+                        <i class="fas fa-chart-pie"></i> OPERATIONAL STATUS
                     </h3>
-                    <div class="monthly-container">
+                    <div class="chart-canvas">
                         <canvas id="clientStatusChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Monthly Analysis Tab -->
+        <!-- Other Tab Contents (Hidden by default) -->
         <div class="tab-content" id="tab1">
-            <div class="section-card">
-                <h3 class="section-title">
-                    <i class="fas fa-calendar-check"></i> Monthly Performance Analysis
+            <div class="control-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-chart-line"></i> MONTHLY PERFORMANCE ANALYSIS
                 </h3>
-                
-                <div class="month-filter">
-                    <label style="font-weight: 600; color: var(--text-secondary);">
-                        <i class="fas fa-filter"></i> Filter by Month:
-                    </label>
-                    <select id="monthFilter" onchange="updateMonthlyAnalysisByMonth()">
-                        <option value="all">All Months</option>
-                    </select>
-                </div>
-                
                 <div id="monthlyAnalysisContainer">
-                    <!-- Will be populated FAST on tab click -->
+                    <!-- Monthly analysis will be loaded here -->
                 </div>
             </div>
         </div>
 
-        <!-- Client Analysis Tab -->
         <div class="tab-content" id="tab2">
-            <div class="section-card">
-                <h3 class="section-title">
-                    <i class="fas fa-users"></i> Client Performance Report
+            <div class="control-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-building"></i> CLIENT PERFORMANCE REPORT
                 </h3>
-                
-                <div class="export-buttons">
-                    <div class="filter-status" id="gsClientFilterStatus">
-                        <i class="fas fa-building"></i> Loading client data...
-                    </div>
-                    <button class="export-btn export-csv" onclick="exportGSClientData('csv')">
-                        <i class="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button class="export-btn export-pdf" onclick="exportGSClientData('pdf')">
-                        <i class="fas fa-file-pdf"></i> Export PDF
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table id="gsClientAnalysisTable">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-hashtag"></i> S.No</th>
-                                <th><i class="fas fa-building"></i> Client Name</th>
-                                <th><i class="fas fa-car"></i> Vehicle Count</th>
-                                <th><i class="fas fa-list"></i> Vehicle Numbers</th>
-                                <th><i class="fas fa-exclamation-triangle"></i> Problem Vehicles</th>
-                                <th><i class="fas fa-info-circle"></i> Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gsClientAnalysisBody">
-                            <!-- Will be populated FAST on tab click -->
-                        </tbody>
-                    </table>
+                <div id="clientReportContainer">
+                    <!-- Client report will be loaded here -->
                 </div>
             </div>
         </div>
 
-        <!-- City Analysis Tab -->
         <div class="tab-content" id="tab3">
-            <div class="section-card">
-                <h3 class="section-title">
-                    <i class="fas fa-map-marked-alt"></i> Location Performance Report
+            <div class="control-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-map"></i> LOCATION PERFORMANCE REPORT
                 </h3>
-                
-                <div class="export-buttons">
-                    <div class="filter-status" id="gsCityFilterStatus">
-                        <i class="fas fa-map-marker-alt"></i> Loading city data...
-                    </div>
-                    <button class="export-btn export-csv" onclick="exportGSCityData('csv')">
-                        <i class="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button class="export-btn export-pdf" onclick="exportGSCityData('pdf')">
-                        <i class="fas fa-file-pdf"></i> Export PDF
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table id="gsCityAnalysisTable">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-hashtag"></i> S.No</th>
-                                <th><i class="fas fa-map-marker-alt"></i> City / Location</th>
-                                <th><i class="fas fa-car"></i> Vehicle Count</th>
-                                <th><i class="fas fa-list"></i> Vehicle Numbers</th>
-                                <th><i class="fas fa-exclamation-triangle"></i> Problem Vehicles</th>
-                                <th><i class="fas fa-info-circle"></i> Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gsCityAnalysisBody">
-                            <!-- Will be populated FAST on tab click -->
-                        </tbody>
-                    </table>
+                <div id="locationReportContainer">
+                    <!-- Location report will be loaded here -->
                 </div>
             </div>
         </div>
 
-        <!-- Comprehensive Summary Tab -->
         <div class="tab-content" id="tab4">
-            <div class="section-card">
-                <h3 class="section-title">
-                    <i class="fas fa-analytics"></i> Executive Summary Report
+            <div class="control-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-clipboard-list"></i> EXECUTIVE SUMMARY
                 </h3>
-                
-                <div id="comprehensiveSummaryContainer">
-                    <!-- Will be populated FAST on tab click -->
+                <div id="executiveSummaryContainer">
+                    <!-- Executive summary will be loaded here -->
                 </div>
             </div>
         </div>
 
-        <!-- Client Analysis Tab -->
         <div class="tab-content" id="tab5">
-            <div class="section-card">
-                <h3 class="section-title">
-                    <i class="fas fa-building"></i> Client Analysis Dashboard
+            <div class="control-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-users"></i> CLIENT ANALYTICS
                 </h3>
-                
-                <div class="charts-section">
-                    <div class="chart-container single-chart">
-                        <h3 class="chart-title">
-                            <i class="fas fa-chart-pie"></i> Client Vehicle Distribution
-                        </h3>
-                        <div class="monthly-container">
-                            <canvas id="clientChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <table id="clientAnalysisTable">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-building"></i> Client Name</th>
-                                <th><i class="fas fa-car"></i> Total Vehicles</th>
-                                <th><i class="fas fa-check-circle"></i> Active</th>
-                                <th><i class="fas fa-times-circle"></i> Offline</th>
-                                <th><i class="fas fa-align-center"></i> Aligned</th>
-                                <th><i class="fas fa-exclamation-triangle"></i> Misaligned</th>
-                                <th><i class="fas fa-map-marker-alt"></i> Locations</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clientAnalysisBody"></tbody>
-                    </table>
+                <div id="clientAnalyticsContainer">
+                    <!-- Client analytics will be loaded here -->
                 </div>
             </div>
         </div>
 
-        <!-- Location Analysis Tab -->
         <div class="tab-content" id="tab6">
-            <div class="section-card">
-                <h3 class="section-title">
-                    <i class="fas fa-globe-americas"></i> Location Analysis Dashboard
+            <div class="control-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-globe"></i> LOCATION ANALYTICS
                 </h3>
-                
-                <div class="charts-section">
-                    <div class="chart-container single-chart">
-                        <h3 class="chart-title">
-                            <i class="fas fa-chart-bar"></i> Location Vehicle Distribution
-                        </h3>
-                        <div class="monthly-container">
-                            <canvas id="locationChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <table id="locationAnalysisTable">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-map-marker-alt"></i> Location</th>
-                                <th><i class="fas fa-car"></i> Total Vehicles</th>
-                                <th><i class="fas fa-check-circle"></i> Active</th>
-                                <th><i class="fas fa-times-circle"></i> Offline</th>
-                                <th><i class="fas fa-align-center"></i> Aligned</th>
-                                <th><i class="fas fa-exclamation-triangle"></i> Misaligned</th>
-                                <th><i class="fas fa-building"></i> Clients</th>
-                            </tr>
-                        </thead>
-                        <tbody id="locationAnalysisBody"></tbody>
-                    </table>
+                <div id="locationAnalyticsContainer">
+                    <!-- Location analytics will be loaded here -->
                 </div>
             </div>
         </div>
@@ -1398,17 +1419,1099 @@
     <div id="detailModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle" style="color: var(--text-primary);"></h2>
+            <h2 id="modalTitle" style="color: var(--primary-neon); margin-bottom: 20px;"></h2>
             <div id="modalContent"></div>
         </div>
     </div>
 
-    <!-- Floating Action Button -->
-    <button class="fab" onclick="refreshData()" title="Refresh All Data">
+    <!-- Floating Elements -->
+    <button class="floating-refresh" onclick="refreshData()" title="Refresh Mission Control">
         <i class="fas fa-sync-alt"></i>
     </button>
 
-    <!-- Include the main JavaScript file -->
-    <script src="dashboard.js"></script>
+    <script>
+        // Enhanced Vehicle Dashboard with Last Tab Focus
+        class FuturisticVehicleDashboard {
+            constructor() {
+                this.apiKey = '';
+                this.sheetId = '';
+                this.ranges = [];
+                this.cache = {};
+                this.charts = {};
+                this.loadStartTime = Date.now();
+                this.debounceTimer = null;
+                
+                this.init();
+            }
+            
+            init() {
+                console.log('🚀 Initializing Futuristic Vehicle Dashboard...');
+                this.loadConfig();
+                this.setupEventListeners();
+                this.updateSpeed('INITIALIZING...');
+                
+                if (this.apiKey && this.sheetId) {
+                    this.hideConfigModal();
+                    this.startLoading();
+                } else {
+                    this.showConfigModal();
+                }
+            }
+            
+            // Configuration Management
+            loadConfig() {
+                const config = localStorage.getItem('futuristicDashboardConfig');
+                if (config) {
+                    const parsed = JSON.parse(config);
+                    this.apiKey = parsed.apiKey || '';
+                    this.sheetId = parsed.sheetId || '1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg';
+                    this.ranges = parsed.ranges || [];
+                    
+                    document.getElementById('apiKey').value = this.apiKey;
+                    document.getElementById('sheetId').value = this.sheetId;
+                } else {
+                    this.sheetId = '1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg';
+                    document.getElementById('sheetId').value = this.sheetId;
+                }
+            }
+            
+            saveConfig() {
+                const apiKey = document.getElementById('apiKey').value.trim();
+                const sheetId = document.getElementById('sheetId').value.trim();
+                
+                if (!apiKey || !sheetId) {
+                    this.showError('🚨 API Key and Sheet ID required for mission control');
+                    return;
+                }
+                
+                this.apiKey = apiKey;
+                this.sheetId = sheetId;
+                this.ranges = []; // Auto-detect
+                
+                const config = {
+                    apiKey: this.apiKey,
+                    sheetId: this.sheetId,
+                    ranges: this.ranges
+                };
+                
+                localStorage.setItem('futuristicDashboardConfig', JSON.stringify(config));
+                
+                this.hideConfigModal();
+                this.startLoading();
+            }
+            
+            showConfigModal() {
+                document.getElementById('configModal').style.display = 'flex';
+            }
+            
+            hideConfigModal() {
+                document.getElementById('configModal').style.display = 'none';
+            }
+            
+            // Enhanced Google Sheets API with Last Tab Focus
+            async fetchSheetData() {
+                if (!this.apiKey || !this.sheetId) {
+                    throw new Error('🚨 Mission control credentials required');
+                }
+                
+                try {
+                    this.updateLoadingStatus('🛰️ Connecting to satellite network...');
+                    
+                    // Get all sheet metadata
+                    const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}?key=${this.apiKey}`;
+                    const metadataResponse = await fetch(metadataUrl);
+                    
+                    if (!metadataResponse.ok) {
+                        throw new Error('🚨 Failed to establish satellite connection');
+                    }
+                    
+                    const metadata = await metadataResponse.json();
+                    const allSheets = metadata.sheets || [];
+                    
+                    // Filter and sort daily tabs, get the LAST (most recent) tab
+                    const dailySheets = allSheets
+                        .filter(sheet => {
+                            const name = sheet.properties.title.toLowerCase();
+                            return /\d+(st|nd|rd|th)\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i.test(name) ||
+                                   /\d+\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(name);
+                        })
+                        .sort((a, b) => {
+                            // Sort by sheet index to get the most recent tab
+                            return b.properties.index - a.properties.index;
+                        });
+                    
+                    if (dailySheets.length === 0) {
+                        throw new Error('🚨 No daily tabs detected in mission database');
+                    }
+                    
+                    // Focus on the LAST (most recent) tab for dashboard overview
+                    const lastSheet = dailySheets[0]; // First in sorted array is the most recent
+                    const lastTabRange = `${lastSheet.properties.title}!A:J`;
+                    
+                    console.log(`🎯 Focusing on LATEST tab: ${lastSheet.properties.title}`);
+                    
+                    this.updateLoadingStatus(`📡 Processing latest data from: ${lastSheet.properties.title}`);
+                    
+                    // Fetch data from the last tab specifically
+                    const url = `https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchGet?ranges=${encodeURIComponent(lastTabRange)}&key=${this.apiKey}`;
+                    
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`🚨 Mission control error: ${errorData.error?.message || response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log('✅ Latest mission data acquired successfully');
+                    
+                    this.sheetMetadata = allSheets;
+                    this.lastTabName = lastSheet.properties.title;
+                    
+                    return this.processLatestSheetData(data);
+                    
+                } catch (error) {
+                    console.error('❌ Mission control error:', error);
+                    throw error;
+                }
+            }
+            
+            processLatestSheetData(apiResponse) {
+                this.updateLoadingStatus('🔄 Processing vehicle telemetry...');
+                
+                const allVehicles = [];
+                let clientAnalysis = {};
+                let cityAnalysis = {};
+                
+                // Column mapping
+                const COLUMNS = {
+                    date: 0,        // Column A
+                    location: 1,    // Column B  
+                    vehicle: 2,     // Column C
+                    client: 3,      // Column D
+                    type: 4,        // Column E
+                    installation: 5, // Column F
+                    status: 6,      // Column G (Working Status)
+                    recording: 7,   // Column H
+                    alignment: 8,   // Column I (Alignment Status)
+                    remarks: 9      // Column J
+                };
+                
+                // Utility functions
+                const cleanText = (text) => {
+                    if (!text) return '';
+                    return text.toString()
+                        .replace(/\*\*/g, '')
+                        .replace(/^\s+|\s+$/g, '')
+                        .replace(/\s+/g, ' ');
+                };
+                
+                const formatDate = (dateInput) => {
+                    try {
+                        const dateStr = dateInput.toString();
+                        const tabDateMatch = dateStr.match(/(\d+)(st|nd|rd|th)?\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i);
+                        if (tabDateMatch) {
+                            const day = tabDateMatch[1];
+                            const month = tabDateMatch[3];
+                            return day + ' ' + month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
+                        }
+                        
+                        if (dateStr.includes('-')) {
+                            const parts = dateStr.split('-');
+                            if (parts.length >= 2) {
+                                return parts[0] + ' ' + parts[1];
+                            }
+                        }
+                        
+                        const dayMatch = dateStr.match(/\d+/);
+                        const monthMatch = dateStr.match(/january|february|march|april|may|june|july|august|september|october|november|december/i);
+                        
+                        if (dayMatch && monthMatch) {
+                            return dayMatch[0] + ' ' + monthMatch[0];
+                        }
+                        
+                        return dateStr.replace(/[^\w\s]/g, '').trim();
+                        
+                    } catch (error) {
+                        return dateInput.toString();
+                    }
+                };
+                
+                // Process the latest tab data
+                if (apiResponse.valueRanges && apiResponse.valueRanges[0] && apiResponse.valueRanges[0].values) {
+                    const range = apiResponse.valueRanges[0];
+                    
+                    console.log(`📊 Processing ${range.values.length - 1} vehicle records from latest tab`);
+                    
+                    for (let i = 1; i < range.values.length; i++) {
+                        const row = range.values[i];
+                        
+                        const date = row[COLUMNS.date];
+                        const vehicleNumber = cleanText(row[COLUMNS.vehicle]);
+                        const workingStatus = row[COLUMNS.status];
+                        const alignmentStatus = row[COLUMNS.alignment];
+                        const clientName = cleanText(row[COLUMNS.client]);
+                        const location = cleanText(row[COLUMNS.location]);
+                        const vehicleType = cleanText(row[COLUMNS.type]) || 'Bus';
+                        const installationDate = row[COLUMNS.installation];
+                        const recording = cleanText(row[COLUMNS.recording]);
+                        const remarks = cleanText(row[COLUMNS.remarks]);
+                        
+                        if (!date || !vehicleNumber || !workingStatus) continue;
+                        
+                        // Skip header-like rows
+                        const vehicleLower = vehicleNumber.toLowerCase();
+                        if (vehicleLower.includes('vehicle') || 
+                            vehicleLower.includes('chassis') ||
+                            vehicleLower.includes('number') ||
+                            vehicleNumber === '' ||
+                            vehicleNumber.length < 3) {
+                            continue;
+                        }
+                        
+                        const formattedDate = formatDate(date);
+                        
+                        // Create vehicle object
+                        const vehicleObj = {
+                            vehicle: vehicleNumber,
+                            client: clientName || 'Unknown',
+                            location: location || 'Unknown',
+                            workingStatus: workingStatus || 'Unknown',
+                            alignmentStatus: alignmentStatus || 'Unknown',
+                            vehicleType: vehicleType,
+                            installationDate: installationDate ? formatDate(installationDate) : 'Unknown',
+                            recording: recording || 'Unknown',
+                            date: formattedDate,
+                            remarks: remarks || '',
+                            tabName: this.lastTabName || 'Latest'
+                        };
+                        
+                        allVehicles.push(vehicleObj);
+                        
+                        // Client analysis
+                        if (clientName && clientName.length > 0 && clientName !== '#N/A' && clientName !== 'NA') {
+                            if (!clientAnalysis[clientName]) {
+                                clientAnalysis[clientName] = [];
+                            }
+                            
+                            const existingVehicle = clientAnalysis[clientName].find(v => v.vehicle === vehicleNumber);
+                            if (!existingVehicle) {
+                                clientAnalysis[clientName].push({
+                                    vehicle: vehicleNumber,
+                                    workingStatus: workingStatus,
+                                    alignmentStatus: alignmentStatus || 'Unknown',
+                                    location: location || 'Unknown',
+                                    remarks: remarks || '',
+                                    date: formattedDate
+                                });
+                            }
+                        }
+                        
+                        // City analysis
+                        if (location && location.length > 0 && location !== '#N/A' && location !== 'NA') {
+                            if (!cityAnalysis[location]) {
+                                cityAnalysis[location] = [];
+                            }
+                            
+                            const existingVehicle = cityAnalysis[location].find(v => v.vehicle === vehicleNumber);
+                            if (!existingVehicle) {
+                                cityAnalysis[location].push({
+                                    vehicle: vehicleNumber,
+                                    workingStatus: workingStatus,
+                                    alignmentStatus: alignmentStatus || 'Unknown',
+                                    client: clientName || 'Unknown',
+                                    remarks: remarks || '',
+                                    date: formattedDate
+                                });
+                            }
+                        }
+                    }
+                }
+                
+                console.log('🎯 Latest tab processing completed:');
+                console.log(`👥 Clients detected: ${Object.keys(clientAnalysis).length}`);
+                console.log(`🏙️ Locations detected: ${Object.keys(cityAnalysis).length}`);
+                console.log(`🚗 Total vehicles: ${allVehicles.length}`);
+                
+                // Calculate statistics from latest data
+                const stats = {
+                    totalVehicles: allVehicles.length,
+                    activeVehicles: allVehicles.filter(v => v.workingStatus === 'Active').length,
+                    offlineVehicles: allVehicles.filter(v => v.workingStatus.includes('Offlline') || v.workingStatus.includes('Offline')).length,
+                    alignedVehicles: allVehicles.filter(v => v.alignmentStatus === 'Alligned').length,
+                    misalignedVehicles: allVehicles.filter(v => v.alignmentStatus === 'Misalligned').length,
+                    totalClients: Object.keys(clientAnalysis).length,
+                    totalLocations: Object.keys(cityAnalysis).length
+                };
+                
+                stats.healthScore = Math.round(((stats.activeVehicles + stats.alignedVehicles) / (stats.totalVehicles * 2)) * 100) || 0;
+                
+                return {
+                    stats,
+                    allVehicles,
+                    clientAnalysis,
+                    cityAnalysis,
+                    latestTabName: this.lastTabName,
+                    lastUpdated: new Date().toLocaleString()
+                };
+            }
+            
+            // UI Management
+            startLoading() {
+                this.showLoadingOverlay();
+                this.fetchAndRenderData();
+            }
+            
+            showLoadingOverlay() {
+                document.getElementById('loadingOverlay').style.display = 'flex';
+            }
+            
+            hideLoadingOverlay() {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+            
+            updateLoadingStatus(status) {
+                const element = document.getElementById('loadingStatus');
+                if (element) {
+                    element.textContent = status;
+                }
+            }
+            
+            updateSpeed(status) {
+                const indicator = document.getElementById('speedIndicator');
+                const elapsed = (Date.now() - this.loadStartTime) / 1000;
+                indicator.innerHTML = `⚡ ${status} (${elapsed.toFixed(1)}s)`;
+                
+                if (status.includes('COMPLETE')) {
+                    indicator.style.background = 'linear-gradient(135deg, var(--accent-green), var(--primary-neon))';
+                    indicator.style.animation = 'none';
+                    setTimeout(() => {
+                        indicator.innerHTML = `🚀 MISSION CONTROL ACTIVE`;
+                    }, 2000);
+                }
+            }
+            
+            showError(message) {
+                const errorHtml = `
+                    <div style="background: var(--bg-glass); backdrop-filter: var(--blur-effect); padding: 40px; border-radius: 25px; text-align: center; border: 2px solid var(--accent-red); box-shadow: 0 0 30px rgba(239, 71, 111, 0.3);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--accent-red); margin-bottom: 20px; animation: warningBlink 1s infinite;"></i>
+                        <h3 style="color: var(--accent-red); margin-bottom: 15px;">MISSION CONTROL ERROR</h3>
+                        <p style="color: var(--text-primary); margin-bottom: 20px;">${message}</p>
+                        <button onclick="dashboard.showConfigModal()" style="background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon)); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                            <i class="fas fa-satellite-dish"></i> RECONFIGURE
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('statsGrid').innerHTML = errorHtml;
+                this.hideLoadingOverlay();
+            }
+            
+            // Data Fetching & Rendering
+            async fetchAndRenderData() {
+                try {
+                    this.loadStartTime = Date.now();
+                    this.updateSpeed('ACCESSING...');
+                    
+                    const data = await this.fetchSheetData();
+                    this.cache.mainData = data;
+                    
+                    this.hideLoadingOverlay();
+                    this.renderDashboard(data);
+                    this.updateSpeed('COMPLETE');
+                    
+                } catch (error) {
+                    console.error('❌ Mission failed:', error);
+                    this.hideLoadingOverlay();
+                    this.showError(error.message);
+                    this.updateSpeed('ERROR');
+                }
+            }
+            
+            renderDashboard(data) {
+                this.renderStats(data);
+                this.renderClientList(data);
+                this.renderLocationList(data);
+                this.renderCharts(data);
+                this.updateLastUpdated(data.lastUpdated, data.latestTabName);
+            }
+            
+            renderStats(data) {
+                const stats = data.stats || {};
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card total" onclick="dashboard.showVehicleDetails('total')">
+                        <div class="stat-icon"><i class="fas fa-rocket"></i></div>
+                        <div class="stat-value">${stats.totalVehicles || 0}</div>
+                        <div class="stat-label">Total Fleet</div>
+                    </div>
+                    <div class="stat-card active" onclick="dashboard.showVehicleDetails('active')">
+                        <div class="stat-icon"><i class="fas fa-satellite"></i></div>
+                        <div class="stat-value">${stats.activeVehicles || 0}</div>
+                        <div class="stat-label">Active Units</div>
+                    </div>
+                    <div class="stat-card aligned" onclick="dashboard.showVehicleDetails('aligned')">
+                        <div class="stat-icon"><i class="fas fa-crosshairs"></i></div>
+                        <div class="stat-value">${stats.alignedVehicles || 0}</div>
+                        <div class="stat-label">Aligned Systems</div>
+                    </div>
+                    <div class="stat-card misaligned" onclick="dashboard.showVehicleDetails('misaligned')">
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-value">${stats.misalignedVehicles || 0}</div>
+                        <div class="stat-label">Misaligned</div>
+                    </div>
+                    <div class="stat-card offline" onclick="dashboard.showVehicleDetails('offline')">
+                        <div class="stat-icon"><i class="fas fa-wifi-slash"></i></div>
+                        <div class="stat-value">${stats.offlineVehicles || 0}</div>
+                        <div class="stat-label">Offline Units</div>
+                    </div>
+                    <div class="stat-card health">
+                        <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="stat-value">${stats.healthScore || 0}%</div>
+                        <div class="stat-label">System Health</div>
+                    </div>
+                `;
+            }
+            
+            renderClientList(data, showIssuesOnly = false) {
+                const clientAnalysis = data.clientAnalysis || {};
+                const clients = Object.keys(clientAnalysis).sort().slice(0, 20);
+                
+                let filteredClients = clients;
+                if (showIssuesOnly) {
+                    filteredClients = clients.filter(clientName => {
+                        const vehicles = clientAnalysis[clientName];
+                        return vehicles.some(v => v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned');
+                    });
+                }
+                
+                const html = filteredClients.map(clientName => {
+                    const vehicles = clientAnalysis[clientName];
+                    const problemCount = vehicles.filter(v => 
+                        v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned'
+                    ).length;
+                    
+                    const hasProblems = problemCount > 0;
+                    const problemText = hasProblems ? ` (${problemCount} alerts)` : '';
+                    const classString = hasProblems ? 'list-item has-issues' : 'list-item';
+                    
+                    return `
+                        <div class="${classString}" onclick="dashboard.showClientDetails('${clientName}')">
+                            <span class="item-name">
+                                <i class="fas ${hasProblems ? 'fa-exclamation-triangle' : 'fa-building'}"></i> 
+                                ${clientName}${problemText}
+                            </span>
+                            <span class="item-count">${vehicles.length}</span>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('clientList').innerHTML = html;
+            }
+            
+            renderLocationList(data, showIssuesOnly = false) {
+                const locationAnalysis = data.cityAnalysis || {};
+                const locations = Object.keys(locationAnalysis).sort().slice(0, 20);
+                
+                let filteredLocations = locations;
+                if (showIssuesOnly) {
+                    filteredLocations = locations.filter(locationName => {
+                        const vehicles = locationAnalysis[locationName];
+                        return vehicles.some(v => v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned');
+                    });
+                }
+                
+                const html = filteredLocations.map(locationName => {
+                    const vehicles = locationAnalysis[locationName];
+                    const problemCount = vehicles.filter(v => 
+                        v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned'
+                    ).length;
+                    
+                    const hasProblems = problemCount > 0;
+                    const problemText = hasProblems ? ` (${problemCount} alerts)` : '';
+                    const classString = hasProblems ? 'list-item has-issues' : 'list-item';
+                    
+                    return `
+                        <div class="${classString}" onclick="dashboard.showLocationDetails('${locationName}')">
+                            <span class="item-name">
+                                <i class="fas ${hasProblems ? 'fa-exclamation-triangle' : 'fa-map-marker-alt'}"></i> 
+                                ${locationName}${problemText}
+                            </span>
+                            <span class="item-count">${vehicles.length}</span>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('locationList').innerHTML = html;
+            }
+            
+            renderCharts(data) {
+                this.renderThreatChart(data);
+                this.renderStatusChart(data);
+            }
+            
+            renderThreatChart(data) {
+                const ctx = document.getElementById('heatmapChart');
+                if (!ctx) return;
+
+                if (this.charts.threat) this.charts.threat.destroy();
+
+                // Generate threat analysis data
+                const allVehicles = data.allVehicles || [];
+                const locationThreats = {};
+                
+                allVehicles.forEach(vehicle => {
+                    const location = vehicle.location;
+                    if (!locationThreats[location]) {
+                        locationThreats[location] = 0;
+                    }
+                    
+                    // Count issues as threats
+                    if (vehicle.alignmentStatus === 'Misalligned') {
+                        locationThreats[location]++;
+                    }
+                    if (vehicle.workingStatus === 'Offlline >24Hrs') {
+                        locationThreats[location] += 2; // Offline is higher priority
+                    }
+                });
+                
+                const labels = Object.keys(locationThreats).slice(0, 8); // Top 8 locations
+                const threatData = labels.map(location => locationThreats[location] || 0);
+                
+                this.charts.threat = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Threat Level',
+                            data: threatData,
+                            backgroundColor: threatData.map(value => {
+                                if (value > 5) return '#ef476f';
+                                if (value > 2) return '#ffd23f';
+                                return '#06d6a0';
+                            }),
+                            borderWidth: 0,
+                            borderRadius: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#00f5d4',
+                                bodyColor: 'white',
+                                borderColor: '#00f5d4',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: { 
+                            y: { 
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 245, 212, 0.1)' },
+                                ticks: { 
+                                    color: '#a1a1aa',
+                                    stepSize: 1
+                                }
+                            },
+                            x: {
+                                grid: { color: 'rgba(0, 245, 212, 0.1)' },
+                                ticks: { 
+                                    color: '#a1a1aa',
+                                    maxRotation: 45
+                                }
+                            }
+                        },
+                        animation: { duration: 1200, easing: 'easeOutQuart' }
+                    }
+                });
+            }
+            
+            renderStatusChart(data) {
+                const ctx = document.getElementById('clientStatusChart');
+                if (!ctx) return;
+
+                if (this.charts.status) this.charts.status.destroy();
+
+                const clientAnalysis = data.clientAnalysis || {};
+                let allOK = 0;
+                let hasIssues = 0;
+                
+                Object.keys(clientAnalysis).forEach(clientName => {
+                    const vehicles = clientAnalysis[clientName];
+                    const problemCount = vehicles.filter(v => 
+                        v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned'
+                    ).length;
+                    
+                    if (problemCount > 0) {
+                        hasIssues++;
+                    } else {
+                        allOK++;
+                    }
+                });
+
+                this.charts.status = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Operational', 'Critical Alerts'],
+                        datasets: [{
+                            data: [allOK, hasIssues],
+                            backgroundColor: ['#06d6a0', '#ef476f'],
+                            borderWidth: 0,
+                            hoverOffset: 15
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { 
+                                    font: { size: 12, weight: 'bold' },
+                                    color: '#ffffff',
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#00f5d4',
+                                bodyColor: 'white',
+                                borderColor: '#00f5d4',
+                                borderWidth: 1
+                            }
+                        },
+                        animation: { duration: 1500, easing: 'easeOutQuart' }
+                    }
+                });
+            }
+            
+            updateLastUpdated(lastUpdated, tabName) {
+                const element = document.getElementById('lastUpdated');
+                if (element) {
+                    element.innerHTML = `<i class="fas fa-satellite"></i> ${tabName || 'LATEST'} • ${lastUpdated}`;
+                }
+            }
+            
+            // Search functionality
+            performDashboardSearch() {
+                const searchTerm = document.getElementById('dashboardSearchInput').value.toLowerCase();
+                const searchSection = document.getElementById('searchResultsSection');
+                const tbody = document.getElementById('dashboardSearchBody');
+
+                if (this.debounceTimer) {
+                    clearTimeout(this.debounceTimer);
+                }
+
+                if (!searchTerm.trim()) {
+                    searchSection.style.display = 'none';
+                    return;
+                }
+
+                this.debounceTimer = setTimeout(() => {
+                    const allVehicles = this.cache.mainData?.allVehicles || [];
+                    const results = allVehicles.filter(vehicle => 
+                        vehicle.vehicle.toLowerCase().includes(searchTerm) ||
+                        vehicle.client.toLowerCase().includes(searchTerm) ||
+                        vehicle.location.toLowerCase().includes(searchTerm) ||
+                        vehicle.workingStatus.toLowerCase().includes(searchTerm) ||
+                        vehicle.alignmentStatus.toLowerCase().includes(searchTerm) ||
+                        vehicle.remarks.toLowerCase().includes(searchTerm)
+                    );
+
+                    if (results && results.length > 0) {
+                        const html = results.slice(0, 50).map(vehicle => {
+                            const workingStatusClass = vehicle.workingStatus.toLowerCase().includes('active') ? 'status-active' : 'status-offline';
+                            const alignmentStatusClass = vehicle.alignmentStatus.toLowerCase().includes('alligned') && !vehicle.alignmentStatus.toLowerCase().includes('misalligned') ? 'status-aligned' : 'status-misaligned';
+                            
+                            return `
+                                <tr>
+                                    <td style="color: var(--text-primary); font-weight: 600;">${vehicle.vehicle}</td>
+                                    <td style="color: var(--text-primary);">${vehicle.client}</td>
+                                    <td style="color: var(--text-primary);">${vehicle.location}</td>
+                                    <td><span class="status-badge ${workingStatusClass}">${vehicle.workingStatus}</span></td>
+                                    <td><span class="status-badge ${alignmentStatusClass}">${vehicle.alignmentStatus}</span></td>
+                                    <td style="color: var(--text-primary);">${vehicle.date}</td>
+                                </tr>
+                            `;
+                        }).join('');
+
+                        tbody.innerHTML = html;
+                    } else {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-secondary);">🔍 No results found for "${searchTerm}"</td></tr>`;
+                    }
+                    
+                    searchSection.style.display = 'block';
+                }, 300);
+            }
+            
+            // Toggle functions
+            toggleClientList(filter) {
+                document.querySelectorAll('.control-toggle .toggle-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                if (this.cache.mainData) {
+                    this.renderClientList(this.cache.mainData, filter === 'issues');
+                }
+            }
+
+            toggleLocationList(filter) {
+                document.querySelectorAll('.control-toggle .toggle-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                if (this.cache.mainData) {
+                    this.renderLocationList(this.cache.mainData, filter === 'issues');
+                }
+            }
+            
+            // Modal functions
+            showVehicleDetails(category) {
+                if (!this.cache.mainData) return;
+                
+                const data = this.cache.mainData;
+                let vehicles = [];
+                let title = '';
+                
+                switch (category) {
+                    case 'total':
+                        vehicles = data.allVehicles;
+                        title = `🚀 Total Fleet (${vehicles.length})`;
+                        break;
+                    case 'active':
+                        vehicles = data.allVehicles.filter(v => v.workingStatus === 'Active');
+                        title = `🛰️ Active Units (${vehicles.length})`;
+                        break;
+                    case 'offline':
+                        vehicles = data.allVehicles.filter(v => v.workingStatus.includes('Offlline') || v.workingStatus.includes('Offline'));
+                        title = `📡 Offline Units (${vehicles.length})`;
+                        break;
+                    case 'aligned':
+                        vehicles = data.allVehicles.filter(v => v.alignmentStatus === 'Alligned');
+                        title = `🎯 Aligned Systems (${vehicles.length})`;
+                        break;
+                    case 'misaligned':
+                        vehicles = data.allVehicles.filter(v => v.alignmentStatus === 'Misalligned');
+                        title = `⚠️ Misaligned Systems (${vehicles.length})`;
+                        break;
+                }
+                
+                this.showVehicleModal(title, vehicles);
+            }
+            
+            showClientDetails(clientName) {
+                if (!this.cache.mainData || !this.cache.mainData.clientAnalysis[clientName]) return;
+                
+                const vehicles = this.cache.mainData.clientAnalysis[clientName];
+                const title = `🏢 Client: ${clientName} (${vehicles.length} units)`;
+                
+                this.showVehicleModal(title, vehicles);
+            }
+            
+            showLocationDetails(locationName) {
+                if (!this.cache.mainData || !this.cache.mainData.cityAnalysis[locationName]) return;
+                
+                const vehicles = this.cache.mainData.cityAnalysis[locationName];
+                const title = `📍 Location: ${locationName} (${vehicles.length} units)`;
+                
+                this.showVehicleModal(title, vehicles);
+            }
+            
+            showVehicleModal(title, vehicles) {
+                if (!vehicles.length) {
+                    this.showModal(title, '<p style="color: var(--text-primary); text-align: center; padding: 30px;">🚫 No vehicles found in this category.</p>');
+                    return;
+                }
+                
+                const html = `
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0;">
+                        <div style="background: linear-gradient(135deg, var(--accent-green), var(--primary-neon)); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 900; color: white;">${vehicles.filter(v => v.workingStatus === 'Active').length}</div>
+                            <div style="font-size: 0.9rem; color: white; font-weight: 600;">ACTIVE</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, var(--accent-red), #ff4757); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 900; color: white;">${vehicles.filter(v => v.workingStatus.includes('Offlline')).length}</div>
+                            <div style="font-size: 0.9rem; color: white; font-weight: 600;">OFFLINE</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, var(--accent-blue), var(--primary-neon)); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 900; color: white;">${vehicles.filter(v => v.alignmentStatus === 'Alligned').length}</div>
+                            <div style="font-size: 0.9rem; color: white; font-weight: 600;">ALIGNED</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, var(--accent-yellow), var(--accent-red)); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 900; color: white;">${vehicles.filter(v => v.alignmentStatus === 'Misalligned').length}</div>
+                            <div style="font-size: 0.9rem; color: white; font-weight: 600;">MISALIGNED</div>
+                        </div>
+                    </div>
+                    <div class="glass-container" style="padding: 0; border-radius: 15px;">
+                        <table style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-rocket"></i> VEHICLE</th>
+                                    <th><i class="fas fa-building"></i> CLIENT</th>
+                                    <th><i class="fas fa-map-marker-alt"></i> LOCATION</th>
+                                    <th><i class="fas fa-signal"></i> STATUS</th>
+                                    <th><i class="fas fa-crosshairs"></i> ALIGNMENT</th>
+                                    <th><i class="fas fa-calendar"></i> DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${vehicles.map(vehicle => {
+                                    const workingStatusClass = vehicle.workingStatus === 'Active' ? 'status-active' : 'status-offline';
+                                    const alignmentStatusClass = vehicle.alignmentStatus === 'Alligned' ? 'status-aligned' : 'status-misaligned';
+                                    
+                                    return `
+                                        <tr>
+                                            <td style="color: var(--text-primary); font-weight: 700;">${vehicle.vehicle}</td>
+                                            <td style="color: var(--text-primary);">${vehicle.client}</td>
+                                            <td style="color: var(--text-primary);">${vehicle.location}</td>
+                                            <td><span class="status-badge ${workingStatusClass}">${vehicle.workingStatus}</span></td>
+                                            <td><span class="status-badge ${alignmentStatusClass}">${vehicle.alignmentStatus}</span></td>
+                                            <td style="color: var(--text-primary);">${vehicle.date}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                this.showModal(title, html);
+            }
+            
+            showModal(title, content) {
+                document.getElementById('modalTitle').innerHTML = title;
+                document.getElementById('modalContent').innerHTML = content;
+                document.getElementById('detailModal').style.display = 'block';
+            }
+            
+            closeModal() {
+                document.getElementById('detailModal').style.display = 'none';
+            }
+            
+            // Tab switching
+            switchTab(tabIndex) {
+                document.querySelectorAll('.tab').forEach((tab, index) => {
+                    tab.classList.toggle('active', index === tabIndex);
+                });
+                document.querySelectorAll('.tab-content').forEach((content, index) => {
+                    content.classList.toggle('active', index === tabIndex);
+                });
+
+                // Load tab-specific data when needed
+                if (tabIndex > 0) {
+                    this.loadTabData(tabIndex);
+                }
+            }
+
+            loadTabData(tabIndex) {
+                // For now, show placeholder content for other tabs
+                const tabContent = document.querySelector(`#tab${tabIndex}`);
+                if (tabContent && tabContent.innerHTML.trim() === '' || 
+                    !tabContent.querySelector('.control-panel').innerHTML.includes('data')) {
+                    
+                    const placeholderContent = `
+                        <div style="text-align: center; padding: 80px 40px; color: var(--text-secondary);">
+                            <i class="fas fa-satellite-dish" style="font-size: 4rem; margin-bottom: 20px; color: var(--primary-neon); opacity: 0.5;"></i>
+                            <h3 style="color: var(--primary-neon); margin-bottom: 15px; font-size: 1.5rem;">🚀 SYSTEM MODULE</h3>
+                            <p style="font-size: 1.1rem; margin-bottom: 10px;">This advanced module is ready for deployment</p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;">Enhanced features will be loaded from the latest vehicle data tab</p>
+                            <div style="margin-top: 30px;">
+                                <button class="control-btn" onclick="dashboard.refreshData()" style="padding: 15px 30px; font-size: 14px;">
+                                    <i class="fas fa-rocket"></i> ACTIVATE MODULE
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const container = tabContent.querySelector('.control-panel');
+                    if (container) {
+                        container.innerHTML = `
+                            <h3 class="panel-title">
+                                <i class="fas fa-satellite"></i> ${this.getTabTitle(tabIndex)}
+                            </h3>
+                            ${placeholderContent}
+                        `;
+                    }
+                }
+            }
+
+            getTabTitle(tabIndex) {
+                const titles = [
+                    'MISSION CONTROL',
+                    'MONTHLY ANALYSIS',
+                    'CLIENT OPERATIONS',
+                    'LOCATION NETWORK',
+                    'EXECUTIVE COMMAND',
+                    'CLIENT ANALYTICS',
+                    'LOCATION ANALYTICS'
+                ];
+                return titles[tabIndex] || 'SYSTEM MODULE';
+            }
+            
+            // Utility functions
+            setupEventListeners() {
+                // Close modal on outside click
+                window.onclick = (event) => {
+                    const modal = document.getElementById('detailModal');
+                    if (event.target === modal) {
+                        this.closeModal();
+                    }
+                };
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeModal();
+                    }
+                    if (e.ctrlKey && e.key === 'r') {
+                        e.preventDefault();
+                        this.refreshData();
+                    }
+                });
+
+                // Add some futuristic sound effects on interactions (optional)
+                document.addEventListener('click', (e) => {
+                    if (e.target.matches('.stat-card, .list-item, .control-btn, .toggle-btn')) {
+                        // Could add sound effects here
+                        e.target.style.transform = 'scale(0.98)';
+                        setTimeout(() => {
+                            e.target.style.transform = '';
+                        }, 100);
+                    }
+                });
+            }
+            
+            refreshData() {
+                console.log('🔄 Refreshing mission control data...');
+                this.cache = {};
+                Object.values(this.charts).forEach(chart => {
+                    if (chart && chart.destroy) chart.destroy();
+                });
+                this.charts = {};
+                this.startLoading();
+            }
+            
+            toggleTheme() {
+                // For now, keep the futuristic dark theme
+                console.log('🌙 Futuristic theme active - additional themes coming soon...');
+            }
+        }
+
+        // Global dashboard instance
+        let dashboard;
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboard = new FuturisticVehicleDashboard();
+        });
+
+        // Global functions for HTML onclick handlers
+        function saveAPIConfig() {
+            dashboard.saveConfig();
+        }
+
+        function showConfig() {
+            dashboard.showConfigModal();
+        }
+
+        function refreshData() {
+            dashboard.refreshData();
+        }
+
+        function toggleTheme() {
+            dashboard.toggleTheme();
+        }
+
+        function switchTab(tabIndex) {
+            dashboard.switchTab(tabIndex);
+        }
+
+        function closeModal() {
+            dashboard.closeModal();
+        }
+
+        function toggleClientList(filter) {
+            dashboard.toggleClientList(filter);
+        }
+
+        function toggleLocationList(filter) {
+            dashboard.toggleLocationList(filter);
+        }
+
+        function performDashboardSearch() {
+            dashboard.performDashboardSearch();
+        }
+
+        // Add some futuristic animations on load
+        window.addEventListener('load', () => {
+            // Animate stats cards on load
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Create floating particles effect (optional)
+            createFloatingParticles();
+        });
+
+        function createFloatingParticles() {
+            const particleCount = 20;
+            const container = document.body;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: fixed;
+                    width: 2px;
+                    height: 2px;
+                    background: var(--primary-neon);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    opacity: 0.3;
+                    z-index: -1;
+                    animation: float${Math.floor(Math.random() * 3) + 1} ${5 + Math.random() * 10}s linear infinite;
+                `;
+                
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                container.appendChild(particle);
+            }
+
+            // Add floating animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float1 {
+                    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+                    10% { opacity: 0.3; }
+                    90% { opacity: 0.3; }
+                    100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+                }
+                @keyframes float2 {
+                    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+                    10% { opacity: 0.3; }
+                    90% { opacity: 0.3; }
+                    100% { transform: translateY(-100px) translateX(-50px); opacity: 0; }
+                }
+                @keyframes float3 {
+                    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+                    10% { opacity: 0.3; }
+                    90% { opacity: 0.3; }
+                    100% { transform: translateY(-100px) translateX(0); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        console.log('🚀 INFTRACK Mission Control System - Initialized');
+        console.log('📡 Focusing on latest vehicle data tab for dashboard overview');
+        console.log('⚡ Futuristic interface with enhanced visual effects active');
+    </script>
 </body>
 </html>

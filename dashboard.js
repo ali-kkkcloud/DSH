@@ -35,19 +35,25 @@ class VehicleDashboard {
             const parsed = JSON.parse(config);
             this.apiKey = parsed.apiKey || '';
             this.sheetId = parsed.sheetId || '1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg';
-            this.ranges = parsed.ranges || ['Sheet1!A:J', 'Sheet2!A:J', 'Sheet3!A:J'];
+            this.ranges = parsed.ranges || [];
             
             // Update form fields
             document.getElementById('apiKey').value = this.apiKey;
             document.getElementById('sheetId').value = this.sheetId;
-            document.getElementById('ranges').value = this.ranges.join(',');
+            document.getElementById('ranges').value = this.ranges.length > 0 ? this.ranges.join(',') : 'Leave empty for auto-detection';
+        } else {
+            // Set defaults for first time
+            this.sheetId = '1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg';
+            this.ranges = [];
+            document.getElementById('sheetId').value = this.sheetId;
+            document.getElementById('ranges').value = 'Leave empty for auto-detection';
         }
     }
     
     saveConfig() {
         const apiKey = document.getElementById('apiKey').value.trim();
         const sheetId = document.getElementById('sheetId').value.trim();
-        const ranges = document.getElementById('ranges').value.trim().split(',').map(r => r.trim());
+        const rangesText = document.getElementById('ranges').value.trim();
         
         if (!apiKey || !sheetId) {
             this.showError('Please enter both API Key and Sheet ID');
@@ -56,7 +62,13 @@ class VehicleDashboard {
         
         this.apiKey = apiKey;
         this.sheetId = sheetId;
-        this.ranges = ranges;
+        
+        // Handle ranges - empty means auto-detection
+        if (rangesText && rangesText !== 'Leave empty for auto-detection') {
+            this.ranges = rangesText.split(',').map(r => r.trim());
+        } else {
+            this.ranges = []; // Empty means auto-detect
+        }
         
         const config = {
             apiKey: this.apiKey,
@@ -88,7 +100,42 @@ class VehicleDashboard {
         try {
             this.updateLoadingStatus('Connecting to Google Sheets...');
             
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchGet?ranges=${this.ranges.join('&ranges=')}&key=${this.apiKey}`;
+            // First, get all sheet names automatically
+            const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}?key=${this.apiKey}`;
+            const metadataResponse = await fetch(metadataUrl);
+            
+            if (!metadataResponse.ok) {
+                throw new Error('Failed to fetch sheet metadata');
+            }
+            
+            const metadata = await metadataResponse.json();
+            const allSheets = metadata.sheets || [];
+            
+            // Auto-detected ranges with better logging
+            const autoRanges = allSheets
+                .filter(sheet => {
+                    const name = sheet.properties.title.toLowerCase();
+                    // Filter only daily tabs (ignore any other sheets)
+                    return /\d+(st|nd|rd|th)\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i.test(name) ||
+                           /\d+\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(name);
+                })
+                .map(sheet => `${sheet.properties.title}!A:J`);
+            
+            const sheetNames = allSheets.map(s => s.properties.title).filter(name => {
+                const nameLower = name.toLowerCase();
+                return /\d+(st|nd|rd|th)\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i.test(nameLower) ||
+                       /\d+\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(nameLower);
+            });
+            
+            console.log('🔍 Auto-detected daily sheets:', sheetNames);
+            console.log('📊 Total sheets found:', sheetNames.length);
+            
+            // Use auto-detected ranges or fallback to user-provided ranges
+            const rangesToUse = autoRanges.length > 0 ? autoRanges : this.ranges;
+            
+            this.updateLoadingStatus(`Processing ${sheetNames.length} daily tabs...`);
+            
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchGet?ranges=${rangesToUse.join('&ranges=')}&key=${this.apiKey}`;
             
             const response = await fetch(url);
             
@@ -99,6 +146,9 @@ class VehicleDashboard {
             
             const data = await response.json();
             console.log('✅ Google Sheets data fetched successfully');
+            
+            // Store sheet metadata for processing
+            this.sheetMetadata = allSheets;
             
             return this.processSheetData(data);
             
@@ -144,6 +194,14 @@ class VehicleDashboard {
         const formatDate = (dateInput) => {
             try {
                 const dateStr = dateInput.toString();
+                
+                // Handle tab names like "26th July", "1st August"
+                const tabDateMatch = dateStr.match(/(\d+)(st|nd|rd|th)?\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i);
+                if (tabDateMatch) {
+                    const day = tabDateMatch[1];
+                    const month = tabDateMatch[3];
+                    return day + ' ' + month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
+                }
                 
                 if (dateStr.includes('-')) {
                     const parts = dateStr.split('-');
@@ -195,17 +253,43 @@ class VehicleDashboard {
             const tabLower = sheetName.toLowerCase();
             const dateLower = dateStr.toLowerCase();
             
+            // Handle daily tabs like "26th July", "1st August", etc.
             for (let month of months) {
                 if (tabLower.includes(month) || dateLower.includes(month)) {
                     return month.charAt(0).toUpperCase() + month.slice(1);
                 }
             }
             
-            // Numeric detection
-            if (dateLower.includes('06') || dateLower.includes('6')) return 'June';
-            if (dateLower.includes('07') || dateLower.includes('7')) return 'July';
-            if (dateLower.includes('08') || dateLower.includes('8')) return 'August';
-            if (dateLower.includes('09') || dateLower.includes('9')) return 'September';
+            // Enhanced month detection from tab names
+            if (tabLower.includes('july') || tabLower.includes('jul')) return 'July';
+            if (tabLower.includes('august') || tabLower.includes('aug')) return 'August';
+            if (tabLower.includes('september') || tabLower.includes('sep')) return 'September';
+            if (tabLower.includes('october') || tabLower.includes('oct')) return 'October';
+            if (tabLower.includes('november') || tabLower.includes('nov')) return 'November';
+            if (tabLower.includes('december') || tabLower.includes('dec')) return 'December';
+            if (tabLower.includes('january') || tabLower.includes('jan')) return 'January';
+            if (tabLower.includes('february') || tabLower.includes('feb')) return 'February';
+            if (tabLower.includes('march') || tabLower.includes('mar')) return 'March';
+            if (tabLower.includes('april') || tabLower.includes('apr')) return 'April';
+            if (tabLower.includes('may')) return 'May';
+            if (tabLower.includes('june') || tabLower.includes('jun')) return 'June';
+            
+            // Try to extract month from date string in the sheet
+            const dateMatch = dateStr.match(/\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i);
+            if (dateMatch) {
+                return dateMatch[1].charAt(0).toUpperCase() + dateMatch[1].slice(1).toLowerCase();
+            }
+            
+            // Try to extract month from numbers in date
+            const numericMatch = dateStr.match(/\b(0?[1-9]|1[0-2])\b/);
+            if (numericMatch) {
+                const monthNum = parseInt(numericMatch[1]);
+                const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
+                                   'July', 'August', 'September', 'October', 'November', 'December'];
+                if (monthNum >= 1 && monthNum <= 12) {
+                    return monthNames[monthNum];
+                }
+            }
             
             return 'Unknown';
         };
@@ -235,7 +319,11 @@ class VehicleDashboard {
         apiResponse.valueRanges.forEach((range, sheetIndex) => {
             if (!range.values || range.values.length < 2) return;
             
-            const sheetName = `Sheet${sheetIndex + 1}`;
+            // Get actual sheet name from metadata or use generic name
+            const sheetName = this.sheetMetadata && this.sheetMetadata[sheetIndex] 
+                ? this.sheetMetadata[sheetIndex].properties.title 
+                : `Sheet${sheetIndex + 1}`;
+            
             console.log(`🔄 Processing ${sheetName}...`);
             
             for (let i = 1; i < range.values.length; i++) {
@@ -351,6 +439,12 @@ class VehicleDashboard {
         stats.healthScore = Math.round(((stats.activeVehicles + stats.alignedVehicles) / (stats.totalVehicles * 2)) * 100) || 0;
         
         console.log('📊 Processing completed:', stats);
+        console.log('📅 Monthly breakdown:');
+        Object.keys(monthlyData).forEach(month => {
+            const vehicles = monthlyData[month];
+            const uniqueVehicles = [...new Set(vehicles.map(v => v.vehicle))].length;
+            console.log(`  ${month}: ${vehicles.length} entries, ${uniqueVehicles} unique vehicles`);
+        });
         
         return {
             stats,

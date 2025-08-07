@@ -1528,6 +1528,7 @@
                 const formatDate = (dateInput) => {
                     try {
                         const dateStr = dateInput.toString();
+                        // Handle "7th August" format specifically
                         const tabDateMatch = dateStr.match(/(\d+)(st|nd|rd|th)?\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i);
                         if (tabDateMatch) {
                             const day = tabDateMatch[1];
@@ -1548,7 +1549,8 @@
                             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                                                'July', 'August', 'September', 'October', 'November', 'December'];
                             const monthIndex = monthNames.indexOf(parts[1]) + 1 || 0;
-                            return monthIndex.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0');
+                            // Return YYYYMM-DD format for proper sorting (August = 08, July = 07)
+                            return '2024' + monthIndex.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0');
                         }
                         return dateStr;
                     } catch (error) {
@@ -1585,11 +1587,12 @@
                 };
 
                 // FIRST PASS: Find ACTUAL latest date by processing ALL data
-                console.log('🔍 PASS 1: Finding latest date across all tabs...');
+                console.log('🔍 PASS 1: Finding latest date across all tabs (Looking for 7th August)...');
                 apiResponse.valueRanges.forEach((range, sheetIndex) => {
                     if (!range.values || range.values.length < 2) return;
                     
                     const sheetName = this.dailySheets[sheetIndex].properties.title;
+                    console.log(`🔍 Checking tab: ${sheetName}`);
                     
                     for (let i = 1; i < range.values.length; i++) {
                         const row = range.values[i];
@@ -1612,17 +1615,21 @@
                         
                         let formattedDate;
                         
-                        // Try to format date from tab name if date cell is not useful
-                        if (date.toString().toLowerCase().includes('date') || date.toString().length < 3) {
-                            formattedDate = formatDate(sheetName);
-                        } else {
+                        // PRIORITY: Use sheet name for date (handles "7th August" format)
+                        formattedDate = formatDate(sheetName);
+                        
+                        // Fallback to date cell if sheet name doesn't work
+                        if (formattedDate === sheetName || formattedDate.length < 5) {
                             formattedDate = formatDate(date);
                         }
                         
                         const sortKey = getDateSortKey(formattedDate);
+                        console.log(`📅 Found date: ${formattedDate} -> Sort key: ${sortKey}`);
+                        
                         if (sortKey > latestDateSortKey) {
                             latestDateSortKey = sortKey;
                             latestDate = formattedDate;
+                            console.log(`✅ NEW LATEST DATE: ${latestDate} (${sortKey})`);
                         }
                     }
                 });
@@ -1632,6 +1639,10 @@
                 if (!latestDate) {
                     console.log('⚠️ No latest date found, this will cause issues');
                     latestDate = 'Current';
+                } else if (latestDate.includes('7') && latestDate.toLowerCase().includes('august')) {
+                    console.log('✅ CONFIRMED: 7th August is the latest date - processing accordingly');
+                } else {
+                    console.log(`⚠️ Expected 7th August but found: ${latestDate}`);
                 }
                 
                 // SECOND PASS: Process all data with focus on latest date
@@ -1691,10 +1702,11 @@
                         
                         let formattedDate;
                         
-                        // Smart date formatting - use sheet name if date cell is not useful
-                        if (date.toString().toLowerCase().includes('date') || date.toString().length < 3) {
-                            formattedDate = formatDate(sheetName);
-                        } else {
+                        // PRIORITY: Use sheet name for date (handles "7th August" format)
+                        formattedDate = formatDate(sheetName);
+                        
+                        // Fallback to date cell if sheet name doesn't work
+                        if (formattedDate === sheetName || formattedDate.length < 5) {
                             formattedDate = formatDate(date);
                         }
                         

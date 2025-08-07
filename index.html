@@ -508,6 +508,7 @@
 
         .stat-card.total::before { background: var(--gradient-primary); }
         .stat-card.active::before { background: var(--gradient-success); }
+        .stat-card.notactive::before { background: var(--gradient-warning); }
         .stat-card.aligned::before { background: var(--gradient-info); }
         .stat-card.misaligned::before { background: var(--gradient-warning); }
         .stat-card.offline::before { background: var(--gradient-danger); }
@@ -556,6 +557,10 @@
         .stat-card.active .stat-icon { 
             background: var(--gradient-success);
             box-shadow: 0 0 25px rgba(6, 214, 160, 0.6);
+        }
+        .stat-card.notactive .stat-icon { 
+            background: var(--gradient-warning);
+            box-shadow: 0 0 25px rgba(255, 210, 63, 0.6);
         }
         .stat-card.aligned .stat-icon { 
             background: var(--gradient-info);
@@ -1078,7 +1083,7 @@
 
         .month-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-bottom: 25px;
         }
@@ -1112,6 +1117,7 @@
 
         .month-stat.active .month-stat-value { color: var(--accent-green); }
         .month-stat.offline .month-stat-value { color: var(--accent-red); }
+        .month-stat.notactive .month-stat-value { color: var(--accent-yellow); }
         .month-stat.alignment .month-stat-value { color: var(--accent-blue); }
 
         /* Responsive Design */
@@ -1521,7 +1527,7 @@
             </div>
         </header>
 
-        <!-- Enhanced Navigation Tabs -->
+        <!-- Enhanced Navigation Tabs (Removed Location Report and Client Report) -->
         <nav class="tabs">
             <button class="tab active" onclick="switchTab(0)">
                 <i class="fas fa-tachometer-alt"></i> FLEET OVERVIEW
@@ -1714,7 +1720,7 @@
     </button>
 
     <script>
-        // Enhanced Vehicle Dashboard with Complete Functionality
+        // Enhanced Vehicle Dashboard with Fixed Latest Date Detection
         class EnhancedVehicleDashboard {
             constructor() {
                 this.apiKey = '';
@@ -1797,7 +1803,7 @@
                 document.getElementById('configModal').style.display = 'none';
             }
             
-            // Enhanced Google Sheets API
+            // Enhanced Google Sheets API with Fixed Latest Date Detection
             async fetchSheetData() {
                 if (!this.apiKey || !this.sheetId) {
                     throw new Error('🚨 Mission control credentials required');
@@ -1816,23 +1822,29 @@
                     const metadata = await metadataResponse.json();
                     const allSheets = metadata.sheets || [];
                     
-                    // Get ALL daily tabs for comprehensive analysis
+                    // Get ALL daily tabs with improved filtering and sorting
                     const dailySheets = allSheets
                         .filter(sheet => {
                             const name = sheet.properties.title.toLowerCase();
-                            return /\d+(st|nd|rd|th)\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i.test(name) ||
-                                   /\d+\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(name);
+                            // Match various date formats from your tabs
+                            return /\d+(st|nd|rd|th)?\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i.test(name) ||
+                                   /\d+\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(name) ||
+                                   /\d+\s*(january|february|march|april|may|june|july|august|september|october|november|december)/i.test(name) ||
+                                   /\d+\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(name);
                         })
-                        .sort((a, b) => a.properties.index - b.properties.index);
+                        .sort((a, b) => {
+                            // Sort by sheet index first (latest sheets usually have higher indices)
+                            return b.properties.index - a.properties.index;
+                        });
                     
                     if (dailySheets.length === 0) {
                         throw new Error('🚨 No daily tabs detected in mission database');
                     }
                     
+                    console.log(`🎯 Found ${dailySheets.length} daily tabs:`, dailySheets.map(s => s.properties.title));
+                    
                     // Fetch ALL daily tabs
                     const ranges = dailySheets.map(sheet => `${sheet.properties.title}!A:J`);
-                    
-                    console.log(`🎯 Processing ALL ${dailySheets.length} daily tabs for comprehensive analysis`);
                     
                     this.updateLoadingStatus(`📡 Processing ${dailySheets.length} daily data tabs...`);
                     
@@ -1859,6 +1871,52 @@
                 }
             }
             
+            // Enhanced date detection and parsing
+            getDateSortKey(dateStr) {
+                try {
+                    const parts = dateStr.split(' ');
+                    if (parts.length >= 2) {
+                        const day = parseInt(parts[0]) || 0;
+                        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                           'July', 'August', 'September', 'October', 'November', 'December'];
+                        const monthIndex = monthNames.findIndex(m => m.toLowerCase() === parts[1].toLowerCase()) + 1 || 0;
+                        // Create proper sort key: MM-DD format for chronological sorting
+                        return monthIndex.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0');
+                    }
+                    return dateStr;
+                } catch (error) {
+                    return dateStr;
+                }
+            }
+
+            // Enhanced month extraction from sheet names
+            getMonth(sheetName) {
+                const months = {
+                    'january': 'January', 'jan': 'January',
+                    'february': 'February', 'feb': 'February',
+                    'march': 'March', 'mar': 'March',
+                    'april': 'April', 'apr': 'April',
+                    'may': 'May',
+                    'june': 'June', 'jun': 'June',
+                    'july': 'July', 'jul': 'July',
+                    'august': 'August', 'aug': 'August',
+                    'september': 'September', 'sep': 'September',
+                    'october': 'October', 'oct': 'October',
+                    'november': 'November', 'nov': 'November',
+                    'december': 'December', 'dec': 'December'
+                };
+                
+                const tabLower = sheetName.toLowerCase();
+                
+                for (const [key, value] of Object.entries(months)) {
+                    if (tabLower.includes(key)) {
+                        return value;
+                    }
+                }
+                
+                return 'Unknown';
+            }
+
             processComprehensiveSheetData(apiResponse) {
                 this.updateLoadingStatus('🔄 Processing comprehensive vehicle telemetry...');
                 
@@ -1868,7 +1926,6 @@
                 let monthlyBreakdown = {};
                 let alignmentTimelines = {};
                 const uniqueVehicles = new Set();
-                let latestDateData = {};
                 let latestDate = '';
                 let latestDateSortKey = '';
                 
@@ -1887,11 +1944,19 @@
                 const formatDate = (dateInput) => {
                     try {
                         const dateStr = dateInput.toString();
-                        const tabDateMatch = dateStr.match(/(\d+)(st|nd|rd|th)?\s+(january|february|march|april|may|june|july|august|september|october|november|december)/i);
+                        // Handle various date formats from sheet tabs
+                        const tabDateMatch = dateStr.match(/(\d+)(st|nd|rd|th)?\s*(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i);
                         if (tabDateMatch) {
                             const day = tabDateMatch[1];
-                            const month = tabDateMatch[3];
-                            return day + ' ' + month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
+                            const monthStr = tabDateMatch[3];
+                            // Convert short month names to full names
+                            const monthMap = {
+                                'jan': 'January', 'feb': 'February', 'mar': 'March', 'apr': 'April',
+                                'may': 'May', 'jun': 'June', 'jul': 'July', 'aug': 'August',
+                                'sep': 'September', 'oct': 'October', 'nov': 'November', 'dec': 'December'
+                            };
+                            const fullMonth = monthMap[monthStr.toLowerCase()] || monthStr.charAt(0).toUpperCase() + monthStr.slice(1).toLowerCase();
+                            return day + ' ' + fullMonth;
                         }
                         return dateStr.replace(/[^\w\s]/g, '').trim();
                     } catch (error) {
@@ -1899,53 +1964,13 @@
                     }
                 };
 
-                const getDateSortKey = (dateStr) => {
-                    try {
-                        const parts = dateStr.split(' ');
-                        if (parts.length >= 2) {
-                            const day = parseInt(parts[0]) || 0;
-                            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                                               'July', 'August', 'September', 'October', 'November', 'December'];
-                            const monthIndex = monthNames.indexOf(parts[1]) + 1 || 0;
-                            return monthIndex.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0');
-                        }
-                        return dateStr;
-                    } catch (error) {
-                        return dateStr;
-                    }
-                };
-                
-                const getMonth = (sheetName) => {
-                    const months = ['january', 'february', 'march', 'april', 'may', 'june', 
-                                   'july', 'august', 'september', 'october', 'november', 'december'];
-                    
-                    const tabLower = sheetName.toLowerCase();
-                    
-                    for (let month of months) {
-                        if (tabLower.includes(month)) {
-                            return month.charAt(0).toUpperCase() + month.slice(1);
-                        }
-                    }
-                    
-                    // Enhanced month detection
-                    if (tabLower.includes('jul')) return 'July';
-                    if (tabLower.includes('aug')) return 'August';
-                    if (tabLower.includes('sep')) return 'September';
-                    if (tabLower.includes('oct')) return 'October';
-                    if (tabLower.includes('nov')) return 'November';
-                    if (tabLower.includes('dec')) return 'December';
-                    if (tabLower.includes('jan')) return 'January';
-                    if (tabLower.includes('feb')) return 'February';
-                    if (tabLower.includes('mar')) return 'March';
-                    if (tabLower.includes('apr')) return 'April';
-                    if (tabLower.includes('jun')) return 'June';
-                    
-                    return 'Unknown';
-                };
-
-                // First pass: Find latest date
+                // First pass: Find latest date by processing all sheets
+                console.log('🔍 Finding latest date across all tabs...');
                 apiResponse.valueRanges.forEach((range, sheetIndex) => {
                     if (!range.values || range.values.length < 2) return;
+                    
+                    const sheetName = this.dailySheets[sheetIndex]?.properties.title || `Sheet${sheetIndex + 1}`;
+                    console.log(`🔍 Checking dates in: ${sheetName}`);
                     
                     for (let i = 1; i < range.values.length; i++) {
                         const row = range.values[i];
@@ -1953,23 +1978,35 @@
                         
                         if (date) {
                             const formattedDate = formatDate(date);
-                            const sortKey = getDateSortKey(formattedDate);
+                            const sortKey = this.getDateSortKey(formattedDate);
+                            
+                            console.log(`📅 Found date: ${formattedDate} (key: ${sortKey}) in ${sheetName}`);
+                            
                             if (sortKey > latestDateSortKey) {
                                 latestDateSortKey = sortKey;
                                 latestDate = formattedDate;
+                                console.log(`🎯 New latest date: ${latestDate} (key: ${latestDateSortKey})`);
                             }
                         }
                     }
                 });
 
-                console.log(`📅 Latest date found: ${latestDate}`);
+                console.log(`📅 Final latest date found: ${latestDate} (Sort key: ${latestDateSortKey})`);
+                
+                if (!latestDate) {
+                    // Fallback: use the most recent sheet name
+                    const latestSheetName = this.dailySheets[0]?.properties.title || '';
+                    const dateFromSheetName = formatDate(latestSheetName);
+                    latestDate = dateFromSheetName || 'Current';
+                    console.log(`⚠️ Using sheet name fallback: ${latestDate}`);
+                }
                 
                 // Process all sheets for comprehensive data
                 apiResponse.valueRanges.forEach((range, sheetIndex) => {
                     if (!range.values || range.values.length < 2) return;
                     
                     const sheetName = this.dailySheets[sheetIndex].properties.title;
-                    const month = getMonth(sheetName);
+                    const month = this.getMonth(sheetName);
                     
                     if (month === 'Unknown') return;
                     
@@ -2060,8 +2097,12 @@
 
                         // Process ONLY latest date data for client/city analysis
                         if (formattedDate === latestDate) {
+                            console.log(`📊 Processing latest date entry: ${vehicleNumber} - ${formattedDate}`);
+                            
                             // Client analysis (latest data only)
-                            if (clientName && clientName.length > 0 && clientName !== '#N/A' && clientName !== 'NA') {
+                            if (clientName && clientName.length > 0 && clientName !== '#N/A' && clientName !== 'NA' &&
+                                !clientName.toLowerCase().includes('client name') &&
+                                !clientName.toLowerCase().includes('vehicle number')) {
                                 if (!clientAnalysis[clientName]) {
                                     clientAnalysis[clientName] = [];
                                 }
@@ -2080,7 +2121,10 @@
                             }
                             
                             // City analysis (latest data only)
-                            if (location && location.length > 0 && location !== '#N/A' && location !== 'NA') {
+                            if (location && location.length > 0 && location !== '#N/A' && location !== 'NA' &&
+                                !location.toLowerCase().includes('location') &&
+                                !location.toLowerCase().includes('site') &&
+                                !location.toLowerCase().includes('vehicle number')) {
                                 if (!cityAnalysis[location]) {
                                     cityAnalysis[location] = [];
                                 }
@@ -2104,12 +2148,11 @@
                 // Process alignment timelines for each vehicle
                 Object.keys(alignmentTimelines).forEach(vehicleNumber => {
                     alignmentTimelines[vehicleNumber].sort((a, b) => {
-                        // Sort by month and date
                         if (a.month !== b.month) {
-                            const monthOrder = ['June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                            const monthOrder = ['June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May'];
                             return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
                         }
-                        return a.date.localeCompare(b.date);
+                        return this.getDateSortKey(a.date).localeCompare(this.getDateSortKey(b.date));
                     });
                 });
                 
@@ -2122,7 +2165,7 @@
                     const latestVehicleData = {};
                     vehicles.forEach(vehicle => {
                         if (!latestVehicleData[vehicle.vehicle] || 
-                            getDateSortKey(vehicle.date) > getDateSortKey(latestVehicleData[vehicle.vehicle].date)) {
+                            this.getDateSortKey(vehicle.date) > this.getDateSortKey(latestVehicleData[vehicle.vehicle].date)) {
                             latestVehicleData[vehicle.vehicle] = vehicle;
                         }
                     });
@@ -2132,6 +2175,10 @@
                     monthlyBreakdown[month] = {
                         totalVehicles: uniqueVehiclesCount,
                         activeVehicles: latestVehicles.filter(v => v.workingStatus === 'Active').length,
+                        notActiveVehicles: latestVehicles.filter(v => 
+                            v.workingStatus !== 'Active' && 
+                            !v.workingStatus.includes('Offlline') && 
+                            !v.workingStatus.includes('Offline')).length,
                         offlineVehicles: latestVehicles.filter(v => 
                             v.workingStatus.includes('Offlline') || v.workingStatus.includes('Offline')).length,
                         alignmentIssues: latestVehicles.filter(v => v.alignmentStatus === 'Misalligned').length,
@@ -2140,28 +2187,55 @@
                 });
                 
                 console.log('🎯 Comprehensive processing completed:');
-                console.log(`👥 Clients: ${Object.keys(clientAnalysis).length}`);
-                console.log(`🏙️ Locations: ${Object.keys(cityAnalysis).length}`);
-                console.log(`🚗 Unique vehicles: ${uniqueVehicles.size}`);
+                console.log(`👥 Clients (latest date): ${Object.keys(clientAnalysis).length}`);
+                console.log(`🏙️ Locations (latest date): ${Object.keys(cityAnalysis).length}`);
+                console.log(`🚗 Unique vehicles total: ${uniqueVehicles.size}`);
                 console.log(`📊 Months processed: ${Object.keys(monthlyBreakdown).join(', ')}`);
                 console.log(`⚖️ Vehicles with alignment data: ${Object.keys(alignmentTimelines).length}`);
+                console.log(`📅 Latest date used: ${latestDate}`);
                 
                 // Calculate latest stats (from most recent data - latest date only)
                 const latestVehicles = allVehicles.filter(v => v.date === latestDate);
+                const uniqueLatestVehicles = [...new Set(latestVehicles.map(v => v.vehicle))];
+                
+                console.log(`📊 Latest date vehicles: ${latestVehicles.length} entries, ${uniqueLatestVehicles.length} unique vehicles`);
                 
                 const stats = {
-                    totalVehicles: [...new Set(latestVehicles.map(v => v.vehicle))].length,
-                    activeVehicles: latestVehicles.filter(v => v.workingStatus === 'Active').length,
-                    offlineVehicles: latestVehicles.filter(v => 
-                        v.workingStatus.includes('Offlline') || v.workingStatus.includes('Offline')).length,
-                    alignedVehicles: latestVehicles.filter(v => v.alignmentStatus === 'Alligned').length,
-                    misalignedVehicles: latestVehicles.filter(v => v.alignmentStatus === 'Misalligned').length,
+                    totalVehicles: uniqueLatestVehicles.length,
+                    activeVehicles: 0,
+                    notActiveVehicles: 0,
+                    offlineVehicles: 0,
+                    alignedVehicles: 0,
+                    misalignedVehicles: 0,
                     totalClients: Object.keys(clientAnalysis).length,
                     totalLocations: Object.keys(cityAnalysis).length
                 };
                 
-                stats.notActiveVehicles = stats.totalVehicles - stats.activeVehicles - stats.offlineVehicles;
+                // Get latest status for each unique vehicle
+                const latestVehicleStatuses = {};
+                latestVehicles.forEach(vehicle => {
+                    latestVehicleStatuses[vehicle.vehicle] = vehicle;
+                });
+                
+                Object.values(latestVehicleStatuses).forEach(vehicle => {
+                    if (vehicle.workingStatus === 'Active') {
+                        stats.activeVehicles++;
+                    } else if (vehicle.workingStatus.includes('Offlline') || vehicle.workingStatus.includes('Offline')) {
+                        stats.offlineVehicles++;
+                    } else {
+                        stats.notActiveVehicles++;
+                    }
+                    
+                    if (vehicle.alignmentStatus === 'Alligned') {
+                        stats.alignedVehicles++;
+                    } else if (vehicle.alignmentStatus === 'Misalligned') {
+                        stats.misalignedVehicles++;
+                    }
+                });
+                
                 stats.healthScore = Math.round((stats.activeVehicles / stats.totalVehicles) * 100) || 0;
+                
+                console.log('📊 Final stats:', stats);
                 
                 this.alignmentData = alignmentTimelines;
                 this.monthlyBreakdown = monthlyBreakdown;
@@ -2170,7 +2244,7 @@
                 return {
                     stats,
                     allVehicles,
-                    latestVehicles,
+                    latestVehicles: Object.values(latestVehicleStatuses),
                     clientAnalysis,
                     cityAnalysis,
                     monthlyBreakdown,
@@ -2215,7 +2289,6 @@
                     }, 2000);
                 }
             }
-            
             showError(message) {
                 const errorHtml = `
                     <div style="background: var(--bg-glass); backdrop-filter: var(--blur-effect); padding: 50px; border-radius: 30px; text-align: center; border: 2px solid var(--accent-red); box-shadow: 0 0 40px rgba(239, 71, 111, 0.4);">

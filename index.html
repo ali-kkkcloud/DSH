@@ -1332,6 +1332,132 @@
             color: var(--accent-red);
             border: 1px solid var(--accent-red);
         }
+
+        /* Client Operations & Location Network Cards */
+        .operations-card {
+            background: var(--bg-glass);
+            border-radius: 25px;
+            padding: 30px;
+            border: var(--glass-border);
+            box-shadow: var(--shadow-glass);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .operations-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-glass), 0 20px 40px rgba(0, 245, 212, 0.3);
+        }
+
+        .operations-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .operations-card:hover::before {
+            left: 100%;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .card-icon.client {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .card-icon.location {
+            background: var(--gradient-info);
+            color: white;
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: var(--bg-darker);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            background: var(--bg-glass);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+
+        .stat-number.total { color: var(--primary-neon); }
+        .stat-number.active { color: var(--accent-green); }
+        .stat-number.issues { color: var(--accent-red); }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator.healthy {
+            background: rgba(6, 214, 160, 0.1);
+            border: 1px solid var(--accent-green);
+        }
+
+        .status-indicator.issues {
+            background: rgba(239, 71, 111, 0.1);
+            border: 1px solid var(--accent-red);
+        }
+
+        .status-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .status-text.healthy { color: var(--accent-green); }
+        .status-text.issues { color: var(--accent-red); }
     </style>
 </head>
 <body>
@@ -1412,10 +1538,26 @@
             <button class="tab" onclick="switchTab(4)">
                 <i class="fas fa-building"></i> CLIENT REPORT
             </button>
+            <button class="tab" onclick="switchTab(5)">
+                <i class="fas fa-users"></i> CLIENT OPERATIONS
+            </button>
+            <button class="tab" onclick="switchTab(6)">
+                <i class="fas fa-network-wired"></i> LOCATION NETWORK
+            </button>
         </nav>
 
         <!-- Fleet Overview Dashboard -->
         <div class="tab-content active" id="tab0">
+            <!-- Data Source Info -->
+            <div style="background: var(--bg-glass); padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 30px; border: var(--glass-border);">
+                <h4 style="color: var(--primary-neon); margin: 0; font-size: 1.2rem; font-weight: 800;">
+                    <i class="fas fa-calendar-day"></i> Fleet Overview - Latest Date Data
+                </h4>
+                <p style="color: var(--text-secondary); margin: 10px 0 0 0; font-size: 1rem;" id="fleetDataSource">
+                    Showing current fleet status from live sheet
+                </p>
+            </div>
+
             <!-- Enhanced Search Interface -->
             <div class="floating-search">
                 <div class="search-container">
@@ -1558,6 +1700,30 @@
                 </h3>
                 <div id="clientReportContainer">
                     <!-- Client report will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Operations Tab -->
+        <div class="tab-content" id="tab5">
+            <div class="operations-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-users"></i> CLIENT OPERATIONS COMMAND
+                </h3>
+                <div id="clientOperationsContainer">
+                    <!-- Client operations will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Network Tab -->
+        <div class="tab-content" id="tab6">
+            <div class="operations-panel">
+                <h3 class="panel-title">
+                    <i class="fas fa-network-wired"></i> LOCATION PERFORMANCE NETWORK
+                </h3>
+                <div id="locationNetworkContainer">
+                    <!-- Location network will be loaded here -->
                 </div>
             </div>
         </div>
@@ -2199,6 +2365,8 @@
 
                 if (this.charts.location) this.charts.location.destroy();
 
+                // Use only latest date vehicles for chart
+                const latestVehicles = data.latestVehicles || [];
                 const locationAnalysis = data.cityAnalysis || {};
                 const locationData = {};
                 
@@ -2286,7 +2454,8 @@
                                             `Active: ${locationInfo.active}`,
                                             `Offline: ${locationInfo.offline}`,
                                             `Misaligned: ${locationInfo.misaligned}`,
-                                            `Health: ${Math.round((locationInfo.active/locationInfo.total)*100)}%`
+                                            `Health: ${Math.round((locationInfo.active/locationInfo.total)*100)}%`,
+                                            `Data from: ${data.latestDate}`
                                         ];
                                     }
                                 }
@@ -2412,6 +2581,12 @@
                 if (element) {
                     element.innerHTML = `<i class="fas fa-satellite"></i> LIVE • ${lastUpdated}`;
                 }
+                
+                // Update fleet data source info
+                const fleetDataSource = document.getElementById('fleetDataSource');
+                if (fleetDataSource && this.cache.mainData) {
+                    fleetDataSource.innerHTML = `Showing current fleet status from ${this.cache.mainData.latestDate} (Latest Date)`;
+                }
             }
             
             // Tab switching
@@ -2451,6 +2626,12 @@
                         break;
                     case 4:
                         this.renderClientReport();
+                        break;
+                    case 5:
+                        this.renderClientOperations();
+                        break;
+                    case 6:
+                        this.renderLocationNetwork();
                         break;
                 }
                 
@@ -3078,7 +3259,193 @@
                 document.getElementById('clientReportContainer').innerHTML = content;
             }
             
-            // Helper functions
+            renderClientOperations() {
+                const data = this.cache.mainData;
+                const clientAnalysis = data.clientAnalysis || {};
+                
+                const content = `
+                    <div style="background: var(--gradient-primary); padding: 40px; border-radius: 30px; text-align: center; margin-bottom: 40px; position: relative; overflow: hidden;">
+                        <div style="position: relative; z-index: 1;">
+                            <h3 style="color: white; font-size: 2.5rem; font-weight: 900; margin-bottom: 15px;">🏢 CLIENT OPERATIONS COMMAND</h3>
+                            <p style="color: white; opacity: 0.95; font-size: 1.2rem;">Comprehensive client fleet management overview</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                        ${Object.keys(clientAnalysis).map(clientName => {
+                            const vehicles = clientAnalysis[clientName];
+                            const totalVehicles = vehicles.length;
+                            const activeVehicles = vehicles.filter(v => v.workingStatus === 'Active').length;
+                            const issues = vehicles.filter(v => 
+                                v.workingStatus === 'Offlline >24Hrs' || 
+                                v.alignmentStatus === 'Misalligned'
+                            ).length;
+                            
+                            const healthPercentage = Math.round((activeVehicles / totalVehicles) * 100) || 0;
+                            let healthColor, healthText;
+                            
+                            if (healthPercentage >= 90) {
+                                healthColor = 'var(--gradient-success)';
+                                healthText = '✅ Excellent';
+                            } else if (healthPercentage >= 70) {
+                                healthColor = 'var(--gradient-warning)';
+                                healthText = '⚠️ Good';
+                            } else if (healthPercentage >= 50) {
+                                healthColor = 'var(--gradient-warning)';
+                                healthText = '🔶 Fair';
+                            } else {
+                                healthColor = 'var(--gradient-danger)';
+                                healthText = '🚨 Critical';
+                            }
+                            
+                            const hasIssues = issues > 0;
+                            
+                            return `
+                                <div style="background: var(--bg-glass); border-radius: 25px; padding: 30px; border: var(--glass-border); box-shadow: var(--shadow-glass); transition: all 0.4s ease; cursor: pointer; position: relative; overflow: hidden;" 
+                                     onclick="dashboard.showClientDetails('${clientName}')"
+                                     onmouseover="this.style.transform='translateY(-10px) scale(1.02)'; this.style.boxShadow='var(--shadow-glass), 0 20px 40px rgba(0, 245, 212, 0.3)'"
+                                     onmouseout="this.style.transform=''; this.style.boxShadow='var(--shadow-glass)'">
+                                    
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                                        <div style="background: var(--gradient-primary); padding: 12px; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 245, 212, 0.5);">
+                                            <i class="fas fa-building" style="color: white; font-size: 1.2rem;"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="color: var(--text-primary); font-size: 1.1rem; font-weight: 800; margin: 0;">${clientName}</h4>
+                                            <div style="background: ${healthColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-top: 5px; display: inline-block;">
+                                                ${healthText}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                                        <div style="background: var(--bg-darker); padding: 15px; border-radius: 15px; text-align: center; border: var(--glass-border);">
+                                            <div style="font-size: 1.8rem; font-weight: 900; color: var(--primary-neon); margin-bottom: 5px;">${totalVehicles}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Total</div>
+                                        </div>
+                                        <div style="background: var(--bg-darker); padding: 15px; border-radius: 15px; text-align: center; border: var(--glass-border);">
+                                            <div style="font-size: 1.8rem; font-weight: 900; color: var(--accent-green); margin-bottom: 5px;">${activeVehicles}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Active</div>
+                                        </div>
+                                        <div style="background: var(--bg-darker); padding: 15px; border-radius: 15px; text-align: center; border: var(--glass-border);">
+                                            <div style="font-size: 1.8rem; font-weight: 900; color: var(--accent-red); margin-bottom: 5px;">${issues}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Issues</div>
+                                        </div>
+                                    </div>
+                                    
+                                    ${hasIssues ? `
+                                        <div style="background: rgba(239, 71, 111, 0.1); border: 1px solid var(--accent-red); border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                                            <i class="fas fa-exclamation-triangle" style="color: var(--accent-red); font-size: 1rem;"></i>
+                                            <span style="color: var(--accent-red); font-size: 0.85rem; font-weight: 700;">${issues} Critical Issues Detected</span>
+                                        </div>
+                                    ` : `
+                                        <div style="background: rgba(6, 214, 160, 0.1); border: 1px solid var(--accent-green); border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                                            <i class="fas fa-check-circle" style="color: var(--accent-green); font-size: 1rem;"></i>
+                                            <span style="color: var(--accent-green); font-size: 0.85rem; font-weight: 700;">✅ All Systems Operational</span>
+                                        </div>
+                                    `}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                
+                document.getElementById('clientOperationsContainer').innerHTML = content;
+            }
+
+            renderLocationNetwork() {
+                const data = this.cache.mainData;
+                const cityAnalysis = data.cityAnalysis || {};
+                
+                const content = `
+                    <div style="background: var(--gradient-primary); padding: 40px; border-radius: 30px; text-align: center; margin-bottom: 40px; position: relative; overflow: hidden;">
+                        <div style="position: relative; z-index: 1;">
+                            <h3 style="color: white; font-size: 2.5rem; font-weight: 900; margin-bottom: 15px;">🌐 LOCATION PERFORMANCE NETWORK</h3>
+                            <p style="color: white; opacity: 0.95; font-size: 1.2rem;">Real-time monitoring of all operational locations</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                        ${Object.keys(cityAnalysis).map(locationName => {
+                            const vehicles = cityAnalysis[locationName];
+                            const totalVehicles = vehicles.length;
+                            const activeVehicles = vehicles.filter(v => v.workingStatus === 'Active').length;
+                            const issues = vehicles.filter(v => 
+                                v.workingStatus === 'Offlline >24Hrs' || 
+                                v.alignmentStatus === 'Misalligned'
+                            ).length;
+                            
+                            const healthPercentage = Math.round((activeVehicles / totalVehicles) * 100) || 0;
+                            let healthColor, healthText;
+                            
+                            if (healthPercentage >= 90) {
+                                healthColor = 'var(--gradient-success)';
+                                healthText = '✅ Excellent';
+                            } else if (healthPercentage >= 70) {
+                                healthColor = 'var(--gradient-warning)';
+                                healthText = '⚠️ Good';
+                            } else if (healthPercentage >= 50) {
+                                healthColor = 'var(--gradient-warning)';
+                                healthText = '🔶 Fair';
+                            } else {
+                                healthColor = 'var(--gradient-danger)';
+                                healthText = '🚨 Critical';
+                            }
+                            
+                            const hasIssues = issues > 0;
+                            
+                            return `
+                                <div style="background: var(--bg-glass); border-radius: 25px; padding: 30px; border: var(--glass-border); box-shadow: var(--shadow-glass); transition: all 0.4s ease; cursor: pointer; position: relative; overflow: hidden;" 
+                                     onclick="dashboard.showLocationDetails('${locationName}')"
+                                     onmouseover="this.style.transform='translateY(-10px) scale(1.02)'; this.style.boxShadow='var(--shadow-glass), 0 20px 40px rgba(0, 245, 212, 0.3)'"
+                                     onmouseout="this.style.transform=''; this.style.boxShadow='var(--shadow-glass)'">
+                                    
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                                        <div style="background: var(--gradient-info); padding: 12px; border-radius: 12px; box-shadow: 0 0 20px rgba(33, 150, 243, 0.5);">
+                                            <i class="fas fa-map-marker-alt" style="color: white; font-size: 1.2rem;"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="color: var(--text-primary); font-size: 1.1rem; font-weight: 800; margin: 0;">${locationName}</h4>
+                                            <div style="background: ${healthColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-top: 5px; display: inline-block;">
+                                                ${healthText}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                                        <div style="background: var(--bg-darker); padding: 15px; border-radius: 15px; text-align: center; border: var(--glass-border);">
+                                            <div style="font-size: 1.8rem; font-weight: 900; color: var(--primary-neon); margin-bottom: 5px;">${totalVehicles}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Total</div>
+                                        </div>
+                                        <div style="background: var(--bg-darker); padding: 15px; border-radius: 15px; text-align: center; border: var(--glass-border);">
+                                            <div style="font-size: 1.8rem; font-weight: 900; color: var(--accent-green); margin-bottom: 5px;">${activeVehicles}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Active</div>
+                                        </div>
+                                        <div style="background: var(--bg-darker); padding: 15px; border-radius: 15px; text-align: center; border: var(--glass-border);">
+                                            <div style="font-size: 1.8rem; font-weight: 900; color: var(--accent-red); margin-bottom: 5px;">${issues}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Issues</div>
+                                        </div>
+                                    </div>
+                                    
+                                    ${hasIssues ? `
+                                        <div style="background: rgba(239, 71, 111, 0.1); border: 1px solid var(--accent-red); border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                                            <i class="fas fa-exclamation-triangle" style="color: var(--accent-red); font-size: 1rem;"></i>
+                                            <span style="color: var(--accent-red); font-size: 0.85rem; font-weight: 700;">${issues} Critical Issues Detected</span>
+                                        </div>
+                                    ` : `
+                                        <div style="background: rgba(6, 214, 160, 0.1); border: 1px solid var(--accent-green); border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                                            <i class="fas fa-check-circle" style="color: var(--accent-green); font-size: 1rem;"></i>
+                                            <span style="color: var(--accent-green); font-size: 0.85rem; font-weight: 700;">✅ All Systems Operational</span>
+                                        </div>
+                                    `}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                
+                document.getElementById('locationNetworkContainer').innerHTML = content;
+            }
             clientHasIssues(vehicles) {
                 return vehicles.some(v => v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned');
             }
@@ -3377,7 +3744,9 @@
                     'EXECUTIVE SUMMARY',
                     'ALIGNMENT ANALYSIS',
                     'LOCATION REPORT',
-                    'CLIENT REPORT'
+                    'CLIENT REPORT',
+                    'CLIENT OPERATIONS',
+                    'LOCATION NETWORK'
                 ];
                 return titles[tabIndex] || 'SYSTEM MODULE';
             }

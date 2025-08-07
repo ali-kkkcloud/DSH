@@ -1043,76 +1043,21 @@
             padding: 10px;
         }
 
-        /* Monthly Breakdown Cards */
-        .monthly-breakdown {
-            display: grid;
-            gap: 30px;
-            margin-bottom: 40px;
+        /* Enhanced Scrollbars */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { 
+            background: var(--bg-darker); 
+            border-radius: 6px;
         }
-
-        .month-card {
-            background: var(--bg-glass);
-            border-radius: 25px;
-            padding: 35px;
-            border: var(--glass-border);
-            box-shadow: var(--shadow-glass);
-            transition: all 0.5s ease;
+        ::-webkit-scrollbar-thumb { 
+            background: var(--gradient-primary); 
+            border-radius: 6px;
+            box-shadow: 0 0 15px var(--primary-neon);
         }
-
-        .month-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-glass), 0 20px 40px rgba(0, 245, 212, 0.2);
+        ::-webkit-scrollbar-thumb:hover { 
+            background: var(--gradient-primary); 
+            box-shadow: 0 0 25px var(--primary-neon);
         }
-
-        .month-header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 25px;
-            margin: -35px -35px 30px -35px;
-            border-radius: 25px 25px 0 0;
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: 900;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-
-        .month-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .month-stat {
-            background: var(--bg-darker);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border: var(--glass-border);
-            transition: all 0.3s ease;
-        }
-
-        .month-stat:hover {
-            transform: scale(1.05);
-            background: var(--bg-glass);
-        }
-
-        .month-stat-value {
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
-
-        .month-stat-label {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .month-stat.active .month-stat-value { color: var(--accent-green); }
-        .month-stat.offline .month-stat-value { color: var(--accent-red); }
-        .month-stat.alignment .month-stat-value { color: var(--accent-blue); }
 
         /* Responsive Design */
         @media (max-width: 1400px) {
@@ -1141,162 +1086,6 @@
             .filter-grid { grid-template-columns: 1fr; }
         }
 
-        /* Timeline Styles */
-        .timeline-container {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 15px;
-        }
-
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .timeline-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            margin-right: 20px;
-            z-index: 1;
-            box-shadow: 0 0 15px currentColor;
-        }
-
-        .timeline-dot.aligned { background: var(--accent-green); }
-        .timeline-dot.misaligned { background: var(--accent-red); }
-
-        .timeline-line {
-            position: absolute;
-            left: 7px;
-            top: 16px;
-            width: 2px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .timeline-content {
-            flex: 1;
-            background: var(--bg-darker);
-            padding: 15px 20px;
-            border-radius: 12px;
-            border: var(--glass-border);
-        }
-
-        .timeline-status {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .timeline-status.aligned { color: var(--accent-green); }
-        .timeline-status.misaligned { color: var(--accent-red); }
-
-        .timeline-date {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            background: var(--bg-glass);
-            padding: 4px 10px;
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .timeline-remarks {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 8px;
-            font-style: italic;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-top: 25px;
-        }
-
-        .pagination-btn {
-            background: var(--bg-glass);
-            border: var(--glass-border);
-            color: var(--text-primary);
-            padding: 10px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .pagination-btn:hover {
-            background: var(--primary-neon);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .pagination-btn.active {
-            background: var(--primary-neon);
-            color: white;
-            box-shadow: 0 0 20px var(--primary-neon);
-        }
-
-        .pagination-info {
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Enhanced Scrollbars */
-        ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { 
-            background: var(--bg-darker); 
-            border-radius: 6px;
-        }
-        ::-webkit-scrollbar-thumb { 
-            background: var(--gradient-primary); 
-            border-radius: 6px;
-            box-shadow: 0 0 15px var(--primary-neon);
-        }
-        ::-webkit-scrollbar-thumb:hover { 
-            background: var(--gradient-primary); 
-            box-shadow: 0 0 25px var(--primary-neon);
-        }
-
-        /* Search Highlight */
-        .search-highlight {
-            background: var(--primary-neon);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        /* Export Buttons */
-        .export-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .export-btn {
-            background: var(--gradient-success);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .export-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(6, 214, 160, 0.5);
-        }
-
         /* Additional Animations */
         @keyframes textGlow {
             0%, 100% { text-shadow: 0 0 20px var(--primary-neon); }
@@ -1311,153 +1100,6 @@
         .fade-in-row {
             animation: fadeInRow 0.6s ease-out forwards;
         }
-
-        /* Success/Error Messages */
-        .message {
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .message.success {
-            background: linear-gradient(135deg, var(--accent-green), rgba(6, 214, 160, 0.2));
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
-        }
-
-        .message.error {
-            background: linear-gradient(135deg, var(--accent-red), rgba(239, 71, 111, 0.2));
-            color: var(--accent-red);
-            border: 1px solid var(--accent-red);
-        }
-
-        /* Client Operations & Location Network Cards */
-        .operations-card {
-            background: var(--bg-glass);
-            border-radius: 25px;
-            padding: 30px;
-            border: var(--glass-border);
-            box-shadow: var(--shadow-glass);
-            transition: all 0.4s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .operations-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-glass), 0 20px 40px rgba(0, 245, 212, 0.3);
-        }
-
-        .operations-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.1), transparent);
-            transition: left 0.6s;
-        }
-
-        .operations-card:hover::before {
-            left: 100%;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .card-icon {
-            padding: 12px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px currentColor;
-        }
-
-        .card-icon.client {
-            background: var(--gradient-primary);
-            color: white;
-        }
-
-        .card-icon.location {
-            background: var(--gradient-info);
-            color: white;
-        }
-
-        .card-title {
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin: 0;
-        }
-
-        .card-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background: var(--bg-darker);
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            border: var(--glass-border);
-            transition: all 0.3s ease;
-        }
-
-        .stat-box:hover {
-            transform: scale(1.05);
-            background: var(--bg-glass);
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 900;
-            margin-bottom: 5px;
-        }
-
-        .stat-number.total { color: var(--primary-neon); }
-        .stat-number.active { color: var(--accent-green); }
-        .stat-number.issues { color: var(--accent-red); }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .status-indicator {
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-indicator.healthy {
-            background: rgba(6, 214, 160, 0.1);
-            border: 1px solid var(--accent-green);
-        }
-
-        .status-indicator.issues {
-            background: rgba(239, 71, 111, 0.1);
-            border: 1px solid var(--accent-red);
-        }
-
-        .status-text {
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .status-text.healthy { color: var(--accent-green); }
-        .status-text.issues { color: var(--accent-red); }
     </style>
 </head>
 <body>
@@ -1714,7 +1356,7 @@
     </button>
 
     <script>
-        // Enhanced Vehicle Dashboard with Complete Functionality
+        // Enhanced Vehicle Dashboard with Complete Functionality - LATEST DATE FIXED
         class EnhancedVehicleDashboard {
             constructor() {
                 this.apiKey = '';
@@ -1868,7 +1510,6 @@
                 let monthlyBreakdown = {};
                 let alignmentTimelines = {};
                 const uniqueVehicles = new Set();
-                let latestDateData = {};
                 let latestDate = '';
                 let latestDateSortKey = '';
                 
@@ -1943,28 +1584,59 @@
                     return 'Unknown';
                 };
 
-                // First pass: Find latest date
+                // FIRST PASS: Find ACTUAL latest date by processing ALL data
+                console.log('🔍 PASS 1: Finding latest date across all tabs...');
                 apiResponse.valueRanges.forEach((range, sheetIndex) => {
                     if (!range.values || range.values.length < 2) return;
+                    
+                    const sheetName = this.dailySheets[sheetIndex].properties.title;
                     
                     for (let i = 1; i < range.values.length; i++) {
                         const row = range.values[i];
                         const date = row[COLUMNS.date];
+                        const vehicleNumber = cleanText(row[COLUMNS.vehicle]);
+                        const workingStatus = cleanText(row[COLUMNS.status]);
                         
-                        if (date) {
-                            const formattedDate = formatDate(date);
-                            const sortKey = getDateSortKey(formattedDate);
-                            if (sortKey > latestDateSortKey) {
-                                latestDateSortKey = sortKey;
-                                latestDate = formattedDate;
-                            }
+                        // Skip if no basic data
+                        if (!date || !vehicleNumber || !workingStatus) continue;
+                        
+                        // Skip header rows
+                        const vehicleLower = vehicleNumber.toLowerCase();
+                        if (vehicleLower.includes('vehicle') || 
+                            vehicleLower.includes('chassis') ||
+                            vehicleLower.includes('number') ||
+                            vehicleNumber === '' ||
+                            vehicleNumber.length < 3) {
+                            continue;
+                        }
+                        
+                        let formattedDate;
+                        
+                        // Try to format date from tab name if date cell is not useful
+                        if (date.toString().toLowerCase().includes('date') || date.toString().length < 3) {
+                            formattedDate = formatDate(sheetName);
+                        } else {
+                            formattedDate = formatDate(date);
+                        }
+                        
+                        const sortKey = getDateSortKey(formattedDate);
+                        if (sortKey > latestDateSortKey) {
+                            latestDateSortKey = sortKey;
+                            latestDate = formattedDate;
                         }
                     }
                 });
 
-                console.log(`📅 Latest date found: ${latestDate}`);
+                console.log(`📅 LATEST DATE IDENTIFIED: ${latestDate} (Sort key: ${latestDateSortKey})`);
                 
-                // Process all sheets for comprehensive data
+                if (!latestDate) {
+                    console.log('⚠️ No latest date found, this will cause issues');
+                    latestDate = 'Current';
+                }
+                
+                // SECOND PASS: Process all data with focus on latest date
+                console.log('🔍 PASS 2: Processing all data with latest date focus...');
+                
                 apiResponse.valueRanges.forEach((range, sheetIndex) => {
                     if (!range.values || range.values.length < 2) return;
                     
@@ -2017,7 +1689,14 @@
                             continue;
                         }
                         
-                        const formattedDate = formatDate(date);
+                        let formattedDate;
+                        
+                        // Smart date formatting - use sheet name if date cell is not useful
+                        if (date.toString().toLowerCase().includes('date') || date.toString().length < 3) {
+                            formattedDate = formatDate(sheetName);
+                        } else {
+                            formattedDate = formatDate(date);
+                        }
                         
                         const vehicleObj = {
                             vehicle: vehicleNumber,
@@ -2031,7 +1710,8 @@
                             date: formattedDate,
                             remarks: remarks || '',
                             month: month,
-                            tabName: sheetName
+                            tabName: sheetName,
+                            dateOrder: getDateSortKey(formattedDate)
                         };
                         
                         allVehicles.push(vehicleObj);
@@ -2054,14 +1734,26 @@
                                 tabName: sheetName,
                                 client: clientName,
                                 location: location,
-                                remarks: remarks
+                                remarks: remarks,
+                                dateOrder: getDateSortKey(formattedDate)
                             });
                         }
 
-                        // Process ONLY latest date data for client/city analysis
-                        if (formattedDate === latestDate) {
-                            // Client analysis (latest data only)
-                            if (clientName && clientName.length > 0 && clientName !== '#N/A' && clientName !== 'NA') {
+                        // *** CRITICAL FIX: Process ONLY latest date data for client/city analysis ***
+                        const isLatestDate = (formattedDate === latestDate) || 
+                                           (getDateSortKey(formattedDate) === latestDateSortKey);
+                        
+                        if (isLatestDate) {
+                            console.log(`✅ Processing LATEST DATE data: ${vehicleNumber} on ${formattedDate}`);
+                            
+                            // Client analysis (LATEST DATE ONLY)
+                            if (clientName && 
+                                clientName.length > 0 && 
+                                clientName !== '#N/A' && 
+                                clientName !== 'NA' &&
+                                !clientName.toLowerCase().includes('client name') &&
+                                !clientName.toLowerCase().includes('vehicle number')) {
+                                
                                 if (!clientAnalysis[clientName]) {
                                     clientAnalysis[clientName] = [];
                                 }
@@ -2079,8 +1771,15 @@
                                 }
                             }
                             
-                            // City analysis (latest data only)
-                            if (location && location.length > 0 && location !== '#N/A' && location !== 'NA') {
+                            // City analysis (LATEST DATE ONLY)
+                            if (location && 
+                                location.length > 0 && 
+                                location !== '#N/A' && 
+                                location !== 'NA' &&
+                                !location.toLowerCase().includes('location') &&
+                                !location.toLowerCase().includes('site') &&
+                                !location.toLowerCase().includes('vehicle number')) {
+                                
                                 if (!cityAnalysis[location]) {
                                     cityAnalysis[location] = [];
                                 }
@@ -2104,12 +1803,7 @@
                 // Process alignment timelines for each vehicle
                 Object.keys(alignmentTimelines).forEach(vehicleNumber => {
                     alignmentTimelines[vehicleNumber].sort((a, b) => {
-                        // Sort by month and date
-                        if (a.month !== b.month) {
-                            const monthOrder = ['June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                            return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
-                        }
-                        return a.date.localeCompare(b.date);
+                        return a.dateOrder.localeCompare(b.dateOrder);
                     });
                 });
                 
@@ -2122,7 +1816,7 @@
                     const latestVehicleData = {};
                     vehicles.forEach(vehicle => {
                         if (!latestVehicleData[vehicle.vehicle] || 
-                            getDateSortKey(vehicle.date) > getDateSortKey(latestVehicleData[vehicle.vehicle].date)) {
+                            vehicle.dateOrder > latestVehicleData[vehicle.vehicle].dateOrder) {
                             latestVehicleData[vehicle.vehicle] = vehicle;
                         }
                     });
@@ -2139,23 +1833,39 @@
                     };
                 });
                 
+                // *** CRITICAL FIX: Get LATEST VEHICLES properly ***
+                const latestVehicles = allVehicles.filter(v => {
+                    return v.date === latestDate || v.dateOrder === latestDateSortKey;
+                });
+                
+                // Remove duplicates from latest vehicles - keep only the most recent entry per vehicle
+                const uniqueLatestVehicles = {};
+                latestVehicles.forEach(vehicle => {
+                    const existing = uniqueLatestVehicles[vehicle.vehicle];
+                    if (!existing || vehicle.dateOrder > existing.dateOrder) {
+                        uniqueLatestVehicles[vehicle.vehicle] = vehicle;
+                    }
+                });
+                
+                const finalLatestVehicles = Object.values(uniqueLatestVehicles);
+                
                 console.log('🎯 Comprehensive processing completed:');
-                console.log(`👥 Clients: ${Object.keys(clientAnalysis).length}`);
-                console.log(`🏙️ Locations: ${Object.keys(cityAnalysis).length}`);
-                console.log(`🚗 Unique vehicles: ${uniqueVehicles.size}`);
+                console.log(`👥 Clients (Latest Date): ${Object.keys(clientAnalysis).length}`);
+                console.log(`🏙️ Locations (Latest Date): ${Object.keys(cityAnalysis).length}`);
+                console.log(`🚗 Unique vehicles (Latest Date): ${finalLatestVehicles.length}`);
+                console.log(`🚗 Total unique vehicles (All Time): ${uniqueVehicles.size}`);
                 console.log(`📊 Months processed: ${Object.keys(monthlyBreakdown).join(', ')}`);
                 console.log(`⚖️ Vehicles with alignment data: ${Object.keys(alignmentTimelines).length}`);
+                console.log(`📅 Latest Date: ${latestDate}`);
                 
-                // Calculate latest stats (from most recent data - latest date only)
-                const latestVehicles = allVehicles.filter(v => v.date === latestDate);
-                
+                // *** CRITICAL FIX: Calculate stats from LATEST DATE ONLY ***
                 const stats = {
-                    totalVehicles: [...new Set(latestVehicles.map(v => v.vehicle))].length,
-                    activeVehicles: latestVehicles.filter(v => v.workingStatus === 'Active').length,
-                    offlineVehicles: latestVehicles.filter(v => 
+                    totalVehicles: finalLatestVehicles.length,
+                    activeVehicles: finalLatestVehicles.filter(v => v.workingStatus === 'Active').length,
+                    offlineVehicles: finalLatestVehicles.filter(v => 
                         v.workingStatus.includes('Offlline') || v.workingStatus.includes('Offline')).length,
-                    alignedVehicles: latestVehicles.filter(v => v.alignmentStatus === 'Alligned').length,
-                    misalignedVehicles: latestVehicles.filter(v => v.alignmentStatus === 'Misalligned').length,
+                    alignedVehicles: finalLatestVehicles.filter(v => v.alignmentStatus === 'Alligned').length,
+                    misalignedVehicles: finalLatestVehicles.filter(v => v.alignmentStatus === 'Misalligned').length,
                     totalClients: Object.keys(clientAnalysis).length,
                     totalLocations: Object.keys(cityAnalysis).length
                 };
@@ -2170,7 +1880,7 @@
                 return {
                     stats,
                     allVehicles,
-                    latestVehicles,
+                    latestVehicles: finalLatestVehicles, // *** FIXED ***
                     clientAnalysis,
                     cityAnalysis,
                     monthlyBreakdown,
@@ -2335,9 +2045,8 @@
 
                 if (this.charts.location) this.charts.location.destroy();
 
-                // Use only latest date vehicles for chart
-                const latestVehicles = data.latestVehicles || [];
-                const locationAnalysis = data.cityAnalysis || {};
+                // *** CRITICAL FIX: Use LATEST DATE DATA for charts ***
+                const locationAnalysis = data.cityAnalysis || {}; // This is already latest date data
                 const locationData = {};
                 
                 Object.keys(locationAnalysis).forEach(location => {
@@ -2474,6 +2183,7 @@
 
                 if (this.charts.status) this.charts.status.destroy();
 
+                // *** CRITICAL FIX: Use LATEST DATE STATS ***
                 const stats = data.stats || {};
                 
                 const statusBreakdown = {
@@ -2620,24 +2330,24 @@
                     const notActiveCount = monthData.totalVehicles - monthData.activeVehicles - monthData.offlineVehicles;
                     
                     return `
-                        <div class="month-card">
-                            <div class="month-header">${month.toUpperCase()} SUMMARY</div>
+                        <div style="background: var(--bg-glass); border-radius: 25px; padding: 35px; border: var(--glass-border); box-shadow: var(--shadow-glass); transition: all 0.5s ease; margin-bottom: 30px;">
+                            <div style="background: var(--gradient-primary); color: white; padding: 25px; margin: -35px -35px 30px -35px; border-radius: 25px 25px 0 0; text-align: center; font-size: 1.4rem; font-weight: 900; text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);">${month.toUpperCase()} SUMMARY</div>
                             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;">
-                                <div class="month-stat active">
-                                    <div class="month-stat-value">${monthData.activeVehicles}</div>
-                                    <div class="month-stat-label">🟢 Active</div>
+                                <div style="background: var(--bg-darker); border: var(--glass-border); padding: 15px; border-radius: 15px; text-align: center; transition: all 0.3s ease;">
+                                    <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: var(--accent-green);">${monthData.activeVehicles}</div>
+                                    <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">🟢 Active</div>
                                 </div>
-                                <div class="month-stat" style="background: var(--bg-darker); border: var(--glass-border); padding: 15px; border-radius: 15px; text-align: center;">
+                                <div style="background: var(--bg-darker); border: var(--glass-border); padding: 15px; border-radius: 15px; text-align: center; transition: all 0.3s ease;">
                                     <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: var(--accent-blue);">${notActiveCount}</div>
                                     <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">🔵 Not Active</div>
                                 </div>
-                                <div class="month-stat offline">
-                                    <div class="month-stat-value">${monthData.offlineVehicles}</div>
-                                    <div class="month-stat-label">🔴 Offline</div>
+                                <div style="background: var(--bg-darker); border: var(--glass-border); padding: 15px; border-radius: 15px; text-align: center; transition: all 0.3s ease;">
+                                    <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: var(--accent-red);">${monthData.offlineVehicles}</div>
+                                    <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">🔴 Offline</div>
                                 </div>
-                                <div class="month-stat alignment">
-                                    <div class="month-stat-value">${monthData.alignmentIssues}</div>
-                                    <div class="month-stat-label">⚖️ Alignment</div>
+                                <div style="background: var(--bg-darker); border: var(--glass-border); padding: 15px; border-radius: 15px; text-align: center; transition: all 0.3s ease;">
+                                    <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: var(--accent-blue);">${monthData.alignmentIssues}</div>
+                                    <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">⚖️ Alignment</div>
                                 </div>
                             </div>
                             <div style="text-align: center; margin-top: 15px; padding: 10px; background: var(--bg-darker); border-radius: 10px;">
@@ -2660,7 +2370,7 @@
                         </div>
                     </div>
                     
-                    <div class="monthly-breakdown">
+                    <div style="margin-bottom: 40px;">
                         ${monthlyCards}
                     </div>
                     
@@ -2782,11 +2492,8 @@
                             <h4 style="color: var(--primary-neon); display: flex; align-items: center; gap: 12px; font-size: 1.4rem;">
                                 <i class="fas fa-list"></i> VEHICLE ALIGNMENT HISTORY
                             </h4>
-                            <div class="export-buttons">
-                                <button class="export-btn" onclick="dashboard.exportAlignmentData('csv')">
-                                    <i class="fas fa-download"></i> EXPORT CSV
-                                </button>
-                                <button class="export-btn" onclick="dashboard.refreshData()">
+                            <div style="display: flex; gap: 12px;">
+                                <button style="background: var(--gradient-success); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="dashboard.refreshData()">
                                     <i class="fas fa-sync"></i> REFRESH
                                 </button>
                             </div>
@@ -2818,10 +2525,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <div class="pagination" id="alignmentPagination">
-                            ${this.generatePagination(misalignedVehicles.length)}
-                        </div>
                     </div>
                 `;
                 
@@ -2840,7 +2543,7 @@
                 return vehiclesToShow.map(vehicleNumber => {
                     const vehicleTimeline = this.filteredAlignmentData[vehicleNumber];
                     const latestEntry = vehicleTimeline[vehicleTimeline.length - 1];
-                    const statusClass = latestEntry.status === 'Alligned' ? 'status-aligned' : 'status-misaligned';
+                    const statusClass = latestEntry.status === 'Alligned' ? 'status-badge status-active' : 'status-badge status-offline';
                     const rowClass = latestEntry.status === 'Misalligned' ? 'style="background: rgba(239, 71, 111, 0.1);"' : '';
                     const changeCount = vehicleTimeline.length;
                     
@@ -2854,7 +2557,7 @@
                             <td style="padding: 18px; color: var(--text-primary); text-align: center; font-weight: 600;">${latestEntry.client}</td>
                             <td style="padding: 18px; color: var(--text-primary); text-align: center;">${latestEntry.location}</td>
                             <td style="padding: 18px; text-align: center;">
-                                <span class="status-badge ${statusClass}">${latestEntry.status}</span>
+                                <span class="${statusClass}">${latestEntry.status}</span>
                             </td>
                             <td style="padding: 18px; text-align: center;">
                                 <button onclick="dashboard.showVehicleTimeline('${vehicleNumber}')" style="background: var(--gradient-success); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
@@ -2864,112 +2567,6 @@
                         </tr>
                     `;
                 }).join('');
-            }
-
-            generatePagination(totalItems) {
-                const totalPages = Math.ceil(totalItems / this.itemsPerPage);
-                if (totalPages <= 1) return '';
-
-                let paginationHtml = '';
-                
-                if (this.currentPage > 1) {
-                    paginationHtml += `<button class="pagination-btn" onclick="dashboard.previousPage()">
-                        <i class="fas fa-chevron-left"></i> Previous
-                    </button>`;
-                }
-
-                paginationHtml += `<span class="pagination-info">Page ${this.currentPage} of ${totalPages}</span>`;
-
-                if (this.currentPage < totalPages) {
-                    paginationHtml += `<button class="pagination-btn" onclick="dashboard.nextPage()">
-                        Next <i class="fas fa-chevron-right"></i>
-                    </button>`;
-                }
-
-                return paginationHtml;
-            }
-
-            // Filter functions for alignment analysis
-            updateAlignmentAnalysisByMonth() {
-                this.applyAlignmentFilters();
-            }
-            
-            updateAlignmentAnalysisByLocation() {
-                this.applyAlignmentFilters();
-            }
-            
-            updateAlignmentAnalysisByClient() {
-                this.applyAlignmentFilters();
-            }
-            
-            updateAlignmentAnalysisByVehicle() {
-                this.applyAlignmentFilters();
-            }
-
-            applyAlignmentFilters() {
-                if (!this.cache.mainData) return;
-
-                const monthFilter = document.getElementById('monthFilter')?.value || 'all';
-                const locationFilter = document.getElementById('locationFilter')?.value || 'all';
-                const clientFilter = document.getElementById('clientFilter')?.value || 'all';
-                const vehicleSearch = document.getElementById('vehicleSearchFilter')?.value.toLowerCase() || '';
-
-                let filteredData = {};
-                const originalData = this.cache.mainData.alignmentTimelines || {};
-
-                Object.keys(originalData).forEach(vehicleNumber => {
-                    const timeline = originalData[vehicleNumber];
-                    
-                    // Filter by vehicle search
-                    if (vehicleSearch && !vehicleNumber.toLowerCase().includes(vehicleSearch)) {
-                        return;
-                    }
-
-                    let filteredTimeline = timeline;
-
-                    // Filter by month
-                    if (monthFilter !== 'all') {
-                        filteredTimeline = filteredTimeline.filter(entry => entry.month === monthFilter);
-                    }
-
-                    // Filter by location
-                    if (locationFilter !== 'all') {
-                        filteredTimeline = filteredTimeline.filter(entry => entry.location === locationFilter);
-                    }
-
-                    // Filter by client
-                    if (clientFilter !== 'all') {
-                        filteredTimeline = filteredTimeline.filter(entry => entry.client === clientFilter);
-                    }
-
-                    if (filteredTimeline.length > 0) {
-                        filteredData[vehicleNumber] = filteredTimeline;
-                    }
-                });
-
-                this.filteredAlignmentData = filteredData;
-                this.currentPage = 1; // Reset to first page
-                this.updateAlignmentDisplay();
-            }
-
-            previousPage() {
-                if (this.currentPage > 1) {
-                    this.currentPage--;
-                    this.updateAlignmentDisplay();
-                }
-            }
-
-            nextPage() {
-                const alignmentData = this.filteredAlignmentData;
-                const misalignedVehicles = Object.keys(alignmentData).filter(vehicleNumber => {
-                    return alignmentData[vehicleNumber].some(entry => entry.status === 'Misalligned');
-                });
-                const totalPages = Math.ceil(misalignedVehicles.length / this.itemsPerPage);
-                
-                if (this.currentPage < totalPages) {
-                    this.currentPage++;
-                    this.updateAlignmentDisplay();
-                }
             }
 
             showVehicleTimeline(vehicleNumber) {
@@ -3012,7 +2609,7 @@
                         <h4 style="color: var(--primary-neon); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; font-size: 1.4rem;">
                             <i class="fas fa-timeline"></i> DETAILED ALIGNMENT TIMELINE
                         </h4>
-                        <div class="timeline-container">
+                        <div style="max-height: 400px; overflow-y: auto; padding-right: 15px;">
                             ${timelineHtml}
                         </div>
                     </div>
@@ -3059,174 +2656,34 @@
 
                 return periods.map((period, index) => {
                     const isAligned = period.status === 'Alligned';
-                    const dotClass = isAligned ? 'aligned' : 'misaligned';
-                    const statusClass = isAligned ? 'aligned' : 'misaligned';
+                    const dotColor = isAligned ? 'var(--accent-green)' : 'var(--accent-red)';
+                    const statusColor = isAligned ? 'var(--accent-green)' : 'var(--accent-red)';
                     
                     const dateRange = period.startDate === period.endDate ? 
                         period.startDate : 
                         `${period.startDate} to ${period.endDate}`;
 
                     return `
-                        <div class="timeline-item">
-                            <div class="timeline-dot ${dotClass}"></div>
-                            ${index < periods.length - 1 ? '<div class="timeline-line"></div>' : ''}
-                            <div class="timeline-content">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px; position: relative;">
+                            <div style="width: 16px; height: 16px; border-radius: 50%; margin-right: 20px; z-index: 1; box-shadow: 0 0 15px currentColor; background: ${dotColor};"></div>
+                            ${index < periods.length - 1 ? '<div style="position: absolute; left: 7px; top: 16px; width: 2px; height: 30px; background: rgba(255, 255, 255, 0.2);"></div>' : ''}
+                            <div style="flex: 1; background: var(--bg-darker); padding: 15px 20px; border-radius: 12px; border: var(--glass-border);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <strong class="timeline-status ${statusClass}">
+                                    <strong style="font-weight: 700; font-size: 1rem; margin-bottom: 5px; color: ${statusColor};">
                                         ${period.status.toUpperCase()}
                                     </strong>
-                                    <span class="timeline-date">
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem; background: var(--bg-glass); padding: 4px 10px; border-radius: 8px; display: inline-block;">
                                         📅 ${dateRange}
                                     </span>
                                 </div>
                                 <div style="color: var(--text-secondary); font-size: 0.9rem;">
                                     Month: ${period.month}
                                 </div>
-                                ${period.remarks ? `<div class="timeline-remarks">${period.remarks}</div>` : ''}
+                                ${period.remarks ? `<div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px; font-style: italic;">${period.remarks}</div>` : ''}
                             </div>
                         </div>
                     `;
                 }).join('');
-            }
-
-            renderLocationReport() {
-                const data = this.cache.mainData;
-                const locations = Object.keys(data.cityAnalysis);
-                
-                const content = `
-                    <div style="background: var(--bg-glass); padding: 30px; border-radius: 25px; border: var(--glass-border); margin-bottom: 30px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                            <h4 style="color: var(--primary-neon); display: flex; align-items: center; gap: 12px; font-size: 1.6rem;">
-                                <i class="fas fa-map-marked-alt"></i> LOCATION OPERATIONS OVERVIEW
-                            </h4>
-                            <div class="export-buttons">
-                                <button class="export-btn" onclick="dashboard.exportLocationData('csv')">
-                                    <i class="fas fa-download"></i> EXPORT CSV
-                                </button>
-                                <input type="text" id="locationSearchInput" placeholder="Search locations..." onkeyup="dashboard.filterLocationReport()" style="padding: 10px 15px; border: var(--glass-border); border-radius: 10px; background: var(--bg-darker); color: var(--text-primary); font-size: 13px;">
-                            </div>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
-                            <div style="background: var(--gradient-primary); padding: 20px; border-radius: 15px; text-align: center;">
-                                <div style="font-size: 2rem; font-weight: 900; color: white;">${locations.length}</div>
-                                <div style="color: white; font-size: 1rem; font-weight: 700;">Total Locations</div>
-                            </div>
-                            <div style="background: var(--gradient-success); padding: 20px; border-radius: 15px; text-align: center;">
-                                <div style="font-size: 2rem; font-weight: 900; color: white;">${locations.filter(l => !this.locationHasIssues(data.cityAnalysis[l])).length}</div>
-                                <div style="color: white; font-size: 1rem; font-weight: 700;">Healthy Locations</div>
-                            </div>
-                            <div style="background: var(--gradient-danger); padding: 20px; border-radius: 15px; text-align: center;">
-                                <div style="font-size: 2rem; font-weight: 900; color: white;">${locations.filter(l => this.locationHasIssues(data.cityAnalysis[l])).length}</div>
-                                <div style="color: white; font-size: 1rem; font-weight: 700;">Issues Detected</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="background: var(--bg-glass); padding: 25px; border-radius: 25px; border: var(--glass-border);">
-                        <div style="background: var(--bg-darker); border-radius: 18px; overflow: hidden; border: var(--glass-border);">
-                            <table id="locationReportTable" style="width: 100%; margin: 0;">
-                                <thead>
-                                    <tr style="background: var(--gradient-primary);">
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-map-marker-alt"></i> LOCATION NAME
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-car"></i> VEHICLES
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-check"></i> ACTIVE
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-exclamation-triangle"></i> ISSUES
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-cogs"></i> STATUS
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-eye"></i> ACTIONS
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="locationReportBody">
-                                    ${this.generateLocationReportRows(data.cityAnalysis)}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-                
-                document.getElementById('locationReportContainer').innerHTML = content;
-            }
-
-            renderClientReport() {
-                const data = this.cache.mainData;
-                const clients = Object.keys(data.clientAnalysis);
-                
-                const content = `
-                    <div style="background: var(--bg-glass); padding: 30px; border-radius: 25px; border: var(--glass-border); margin-bottom: 30px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                            <h4 style="color: var(--primary-neon); display: flex; align-items: center; gap: 12px; font-size: 1.6rem;">
-                                <i class="fas fa-building"></i> CLIENT OPERATIONS OVERVIEW
-                            </h4>
-                            <div class="export-buttons">
-                                <button class="export-btn" onclick="dashboard.exportClientData('csv')">
-                                    <i class="fas fa-download"></i> EXPORT CSV
-                                </button>
-                                <input type="text" id="clientSearchInput" placeholder="Search clients..." onkeyup="dashboard.filterClientReport()" style="padding: 10px 15px; border: var(--glass-border); border-radius: 10px; background: var(--bg-darker); color: var(--text-primary); font-size: 13px;">
-                            </div>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
-                            <div style="background: var(--gradient-primary); padding: 20px; border-radius: 15px; text-align: center;">
-                                <div style="font-size: 2rem; font-weight: 900; color: white;">${clients.length}</div>
-                                <div style="color: white; font-size: 1rem; font-weight: 700;">Total Clients</div>
-                            </div>
-                            <div style="background: var(--gradient-success); padding: 20px; border-radius: 15px; text-align: center;">
-                                <div style="font-size: 2rem; font-weight: 900; color: white;">${clients.filter(c => !this.clientHasIssues(data.clientAnalysis[c])).length}</div>
-                                <div style="color: white; font-size: 1rem; font-weight: 700;">Healthy Clients</div>
-                            </div>
-                            <div style="background: var(--gradient-danger); padding: 20px; border-radius: 15px; text-align: center;">
-                                <div style="font-size: 2rem; font-weight: 900; color: white;">${clients.filter(c => this.clientHasIssues(data.clientAnalysis[c])).length}</div>
-                                <div style="color: white; font-size: 1rem; font-weight: 700;">Issues Detected</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="background: var(--bg-glass); padding: 25px; border-radius: 25px; border: var(--glass-border);">
-                        <div style="background: var(--bg-darker); border-radius: 18px; overflow: hidden; border: var(--glass-border);">
-                            <table id="clientReportTable" style="width: 100%; margin: 0;">
-                                <thead>
-                                    <tr style="background: var(--gradient-primary);">
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-building"></i> CLIENT NAME
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-car"></i> VEHICLES
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-check"></i> ACTIVE
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-exclamation-triangle"></i> ISSUES
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-cogs"></i> STATUS
-                                        </th>
-                                        <th style="padding: 18px; color: white; font-weight: 800; text-align: center;">
-                                            <i class="fas fa-eye"></i> ACTIONS
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="clientReportBody">
-                                    ${this.generateClientReportRows(data.clientAnalysis)}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-                
-                document.getElementById('clientReportContainer').innerHTML = content;
             }
             
             renderClientOperations() {
@@ -3418,86 +2875,68 @@
                 
                 document.getElementById('locationNetworkContainer').innerHTML = content;
             }
-            clientHasIssues(vehicles) {
-                return vehicles.some(v => v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned');
+
+            // Filter functions for alignment analysis
+            updateAlignmentAnalysisByMonth() {
+                this.applyAlignmentFilters();
             }
             
-            locationHasIssues(vehicles) {
-                return vehicles.some(v => v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned');
+            updateAlignmentAnalysisByLocation() {
+                this.applyAlignmentFilters();
+            }
+            
+            updateAlignmentAnalysisByClient() {
+                this.applyAlignmentFilters();
+            }
+            
+            updateAlignmentAnalysisByVehicle() {
+                this.applyAlignmentFilters();
             }
 
-            generateClientReportRows(clientAnalysis) {
-                const clients = Object.keys(clientAnalysis);
-                
-                return clients.map(clientName => {
-                    const vehicles = clientAnalysis[clientName];
-                    const totalVehicles = vehicles.length;
-                    const activeVehicles = vehicles.filter(v => v.workingStatus === 'Active').length;
-                    const problemVehicles = vehicles.filter(v => v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned').length;
-                    const hasIssues = problemVehicles > 0;
-                    const rowClass = hasIssues ? 'style="background: rgba(239, 71, 111, 0.1);"' : '';
+            applyAlignmentFilters() {
+                if (!this.cache.mainData) return;
+
+                const monthFilter = document.getElementById('monthFilter')?.value || 'all';
+                const locationFilter = document.getElementById('locationFilter')?.value || 'all';
+                const clientFilter = document.getElementById('clientFilter')?.value || 'all';
+                const vehicleSearch = document.getElementById('vehicleSearchFilter')?.value.toLowerCase() || '';
+
+                let filteredData = {};
+                const originalData = this.cache.mainData.alignmentTimelines || {};
+
+                Object.keys(originalData).forEach(vehicleNumber => {
+                    const timeline = originalData[vehicleNumber];
                     
-                    return `
-                        <tr ${rowClass} class="fade-in-row" style="transition: all 0.4s ease;">
-                            <td style="padding: 18px; color: var(--text-primary); font-weight: 800;">${clientName}</td>
-                            <td style="padding: 18px; color: var(--text-primary); text-align: center; font-weight: 700;">${totalVehicles}</td>
-                            <td style="padding: 18px; text-align: center;">
-                                <span style="background: var(--gradient-success); color: white; padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 800;">${activeVehicles}</span>
-                            </td>
-                            <td style="padding: 18px; text-align: center;">
-                                <span style="background: var(--gradient-danger); color: white; padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 800;">${problemVehicles}</span>
-                            </td>
-                            <td style="padding: 18px; text-align: center;">
-                                ${hasIssues ? 
-                                    `<span class="status-badge status-offline">ISSUES</span>` :
-                                    `<span class="status-badge status-active">HEALTHY</span>`
-                                }
-                            </td>
-                            <td style="padding: 18px; text-align: center;">
-                                <button onclick="dashboard.showClientDetails('${clientName}')" style="background: var(--gradient-primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
-                                    <i class="fas fa-eye"></i> VIEW DETAILS
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-            
-            generateLocationReportRows(cityAnalysis) {
-                const locations = Object.keys(cityAnalysis);
-                
-                return locations.map(locationName => {
-                    const vehicles = cityAnalysis[locationName];
-                    const totalVehicles = vehicles.length;
-                    const activeVehicles = vehicles.filter(v => v.workingStatus === 'Active').length;
-                    const problemVehicles = vehicles.filter(v => v.workingStatus === 'Offlline >24Hrs' || v.alignmentStatus === 'Misalligned').length;
-                    const hasIssues = problemVehicles > 0;
-                    const rowClass = hasIssues ? 'style="background: rgba(239, 71, 111, 0.1);"' : '';
-                    
-                    return `
-                        <tr ${rowClass} class="fade-in-row" style="transition: all 0.4s ease;">
-                            <td style="padding: 18px; color: var(--text-primary); font-weight: 800;">${locationName}</td>
-                            <td style="padding: 18px; color: var(--text-primary); text-align: center; font-weight: 700;">${totalVehicles}</td>
-                            <td style="padding: 18px; text-align: center;">
-                                <span style="background: var(--gradient-success); color: white; padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 800;">${activeVehicles}</span>
-                            </td>
-                            <td style="padding: 18px; text-align: center;">
-                                <span style="background: var(--gradient-danger); color: white; padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 800;">${problemVehicles}</span>
-                            </td>
-                            <td style="padding: 18px; text-align: center;">
-                                ${hasIssues ? 
-                                    `<span class="status-badge status-offline">ISSUES</span>` :
-                                    `<span class="status-badge status-active">HEALTHY</span>`
-                                }
-                            </td>
-                            <td style="padding: 18px; text-align: center;">
-                                <button onclick="dashboard.showLocationDetails('${locationName}')" style="background: var(--gradient-primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
-                                    <i class="fas fa-eye"></i> VIEW DETAILS
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
+                    // Filter by vehicle search
+                    if (vehicleSearch && !vehicleNumber.toLowerCase().includes(vehicleSearch)) {
+                        return;
+                    }
+
+                    let filteredTimeline = timeline;
+
+                    // Filter by month
+                    if (monthFilter !== 'all') {
+                        filteredTimeline = filteredTimeline.filter(entry => entry.month === monthFilter);
+                    }
+
+                    // Filter by location
+                    if (locationFilter !== 'all') {
+                        filteredTimeline = filteredTimeline.filter(entry => entry.location === locationFilter);
+                    }
+
+                    // Filter by client
+                    if (clientFilter !== 'all') {
+                        filteredTimeline = filteredTimeline.filter(entry => entry.client === clientFilter);
+                    }
+
+                    if (filteredTimeline.length > 0) {
+                        filteredData[vehicleNumber] = filteredTimeline;
+                    }
+                });
+
+                this.filteredAlignmentData = filteredData;
+                this.currentPage = 1; // Reset to first page
+                this.updateAlignmentDisplay();
             }
 
             // Search functionality
@@ -3528,16 +2967,16 @@
 
                     if (results && results.length > 0) {
                         const html = results.slice(0, 50).map(vehicle => {
-                            const workingStatusClass = vehicle.workingStatus.toLowerCase().includes('active') ? 'status-active' : 'status-offline';
-                            const alignmentStatusClass = vehicle.alignmentStatus.toLowerCase().includes('alligned') && !vehicle.alignmentStatus.toLowerCase().includes('misalligned') ? 'status-aligned' : 'status-misaligned';
+                            const workingStatusClass = vehicle.workingStatus.toLowerCase().includes('active') ? 'status-badge status-active' : 'status-badge status-offline';
+                            const alignmentStatusClass = vehicle.alignmentStatus.toLowerCase().includes('alligned') && !vehicle.alignmentStatus.toLowerCase().includes('misalligned') ? 'status-badge status-active' : 'status-badge status-offline';
                             
                             return `
                                 <tr class="fade-in-row">
                                     <td style="color: var(--text-primary); font-weight: 700;">${vehicle.vehicle}</td>
                                     <td style="color: var(--text-primary);">${vehicle.client}</td>
                                     <td style="color: var(--text-primary);">${vehicle.location}</td>
-                                    <td><span class="status-badge ${workingStatusClass}">${vehicle.workingStatus}</span></td>
-                                    <td><span class="status-badge ${alignmentStatusClass}">${vehicle.alignmentStatus}</span></td>
+                                    <td><span class="${workingStatusClass}">${vehicle.workingStatus}</span></td>
+                                    <td><span class="${alignmentStatusClass}">${vehicle.alignmentStatus}</span></td>
                                     <td style="color: var(--text-primary);">${vehicle.date}</td>
                                 </tr>
                             `;
@@ -3649,16 +3088,16 @@
                             </thead>
                             <tbody>
                                 ${vehicles.map(vehicle => {
-                                    const workingStatusClass = vehicle.workingStatus === 'Active' ? 'status-active' : 'status-offline';
-                                    const alignmentStatusClass = vehicle.alignmentStatus === 'Alligned' ? 'status-aligned' : 'status-misaligned';
+                                    const workingStatusClass = vehicle.workingStatus === 'Active' ? 'status-badge status-active' : 'status-badge status-offline';
+                                    const alignmentStatusClass = vehicle.alignmentStatus === 'Alligned' ? 'status-badge status-active' : 'status-badge status-offline';
                                     
                                     return `
                                         <tr class="fade-in-row">
                                             <td style="color: var(--text-primary); font-weight: 800;">${vehicle.vehicle}</td>
                                             <td style="color: var(--text-primary);">${vehicle.client}</td>
                                             <td style="color: var(--text-primary);">${vehicle.location}</td>
-                                            <td><span class="status-badge ${workingStatusClass}">${vehicle.workingStatus}</span></td>
-                                            <td><span class="status-badge ${alignmentStatusClass}">${vehicle.alignmentStatus}</span></td>
+                                            <td><span class="${workingStatusClass}">${vehicle.workingStatus}</span></td>
+                                            <td><span class="${alignmentStatusClass}">${vehicle.alignmentStatus}</span></td>
                                             <td style="color: var(--text-primary);">${vehicle.date}</td>
                                         </tr>
                                     `;
@@ -3719,32 +3158,6 @@
                     'LOCATION NETWORK'
                 ];
                 return titles[tabIndex] || 'SYSTEM MODULE';
-            }
-
-            // Export and filter functions (placeholder implementations)
-            exportAlignmentData(format) {
-                console.log(`Exporting alignment data as ${format}`);
-                // Implementation would go here
-            }
-            
-            exportClientData(format) {
-                console.log(`Exporting client data as ${format}`);
-                // Implementation would go here
-            }
-            
-            exportLocationData(format) {
-                console.log(`Exporting location data as ${format}`);
-                // Implementation would go here
-            }
-
-            filterClientReport() {
-                console.log('Filter client report');
-                // Implementation would go here
-            }
-
-            filterLocationReport() {
-                console.log('Filter location report');
-                // Implementation would go here
             }
             
             // Utility functions
@@ -3853,96 +3266,12 @@
             dashboard.updateAlignmentAnalysisByVehicle();
         }
 
-        function exportAlignmentData(format) {
-            dashboard.exportAlignmentData(format);
-        }
-
-        function exportClientData(format) {
-            dashboard.exportClientData(format);
-        }
-
-        function exportLocationData(format) {
-            dashboard.exportLocationData(format);
-        }
-
-        // Enhanced background effects
-        window.addEventListener('load', () => {
-            createAdvancedParticles();
-            initializeAdvancedFeatures();
-        });
-
-        function createAdvancedParticles() {
-            const particleCount = 40;
-            const container = document.body;
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.style.cssText = `
-                    position: fixed;
-                    width: ${Math.random() * 4 + 2}px;
-                    height: ${Math.random() * 4 + 2}px;
-                    background: ${Math.random() > 0.5 ? 'var(--primary-neon)' : 'var(--secondary-neon)'};
-                    border-radius: 50%;
-                    pointer-events: none;
-                    opacity: ${Math.random() * 0.6 + 0.3};
-                    z-index: -1;
-                    animation: advancedFloat${Math.floor(Math.random() * 4) + 1} ${10 + Math.random() * 20}s linear infinite;
-                    box-shadow: 0 0 ${Math.random() * 15 + 8}px currentColor;
-                `;
-                
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                
-                container.appendChild(particle);
-            }
-
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes advancedFloat1 {
-                    0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-                    10% { opacity: 0.8; }
-                    90% { opacity: 0.8; }
-                    100% { transform: translateY(-150px) translateX(120px) rotate(360deg); opacity: 0; }
-                }
-                @keyframes advancedFloat2 {
-                    0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-                    10% { opacity: 0.6; }
-                    90% { opacity: 0.6; }
-                    100% { transform: translateY(-150px) translateX(-120px) rotate(-360deg); opacity: 0; }
-                }
-                @keyframes advancedFloat3 {
-                    0% { transform: translateY(100vh) translateX(0) scale(0.3); opacity: 0; }
-                    50% { transform: translateY(50vh) translateX(80px) scale(1.5); opacity: 1; }
-                    100% { transform: translateY(-150px) translateX(-50px) scale(0.7); opacity: 0; }
-                }
-                @keyframes advancedFloat4 {
-                    0% { transform: translateY(100vh) translateX(0) scale(1); opacity: 0; }
-                    25% { transform: translateY(75vh) translateX(-80px) scale(0.6); opacity: 0.8; }
-                    75% { transform: translateY(25vh) translateX(100px) scale(1.3); opacity: 0.4; }
-                    100% { transform: translateY(-150px) translateX(0) scale(0.8); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        function initializeAdvancedFeatures() {
-            // Enhanced keyboard shortcuts info
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'F1') {
-                    e.preventDefault();
-                    alert('🚀 INFANTS Keyboard Shortcuts:\n\nCtrl+1-5: Switch tabs\nF5: Refresh data\nEscape: Close modals\nCtrl+R: Refresh dashboard');
-                }
-            });
-            
-            console.log('🚀 INFANTS Enhanced Vehicle Management System - Fully Loaded');
-            console.log('📡 Comprehensive multi-tab data integration complete');
-            console.log('⚡ Advanced features: Timeline tracking, Monthly breakdown, Enhanced UI');
-            console.log('🎯 Alignment timeline with detailed vehicle history');
-            console.log('📊 Executive summary with monthly statistics');
-            console.log('🔍 Advanced search and filtering capabilities');
-            console.log('💎 Premium glassmorphism UI with enhanced animations');
-            console.log('🌟 Press F1 for keyboard shortcuts');
-        }
+        console.log('🚀 INFANTS Enhanced Vehicle Management System - Latest Date Fixed');
+        console.log('📡 All tabs now properly show latest date data');
+        console.log('✅ FLEET OVERVIEW: Latest date vehicles only');
+        console.log('✅ CLIENT OPERATIONS: Latest date client analysis');  
+        console.log('✅ LOCATION NETWORK: Latest date location analysis');
+        console.log('💎 Enhanced data processing with proper date filtering');
     </script>
 </body>
 </html>

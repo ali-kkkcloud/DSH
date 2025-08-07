@@ -35,7 +35,7 @@ class VehicleDashboard {
         if (config) {
             const parsed = JSON.parse(config);
             this.apiKey = parsed.apiKey || '';
-            this.sheetId = parsed.sheetId || '1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg';
+            this.sheetId = parsed.sheetId || '1P1OWqjFKjmV9cxbdQAxsO-d6SIvTvrEfwbOOkdqqe0Q';
             this.ranges = parsed.ranges || [];
             
             // Update form fields
@@ -44,7 +44,7 @@ class VehicleDashboard {
             document.getElementById('ranges').value = this.ranges.length > 0 ? this.ranges.join(',') : 'Leave empty for auto-detection';
         } else {
             // Set defaults for first time
-            this.sheetId = '1eN1ftt0ONgvKgBXc6ei7WY4Jpm6-boRf5sEehujr_hg';
+            this.sheetId = '1P1OWqjFKjmV9cxbdQAxsO-d6SIvTvrEfwbOOkdqqe0Q';
             this.ranges = [];
             document.getElementById('sheetId').value = this.sheetId;
             document.getElementById('ranges').value = 'Leave empty for auto-detection';
@@ -2124,3 +2124,4 @@ function exportGSCityData(format) {
 }
 
 console.log('🚀 Complete Vehicle Dashboard JavaScript Loaded - All Original Features Restored!');
+

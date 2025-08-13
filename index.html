@@ -1117,7 +1117,7 @@
             <textarea id="ranges" class="config-input" rows="3" placeholder="📋 Sheet Ranges (Auto-detected if empty)">Auto-detect all daily tabs</textarea>
             
             <button class="config-btn" onclick="saveAPIConfig()">
-                <i class="fas fa-rocket"></i> INITIALIZE MISSION CONTROL
+                <i class="fas fa-rocket"></i> INITIALIZE INFANTS SYSTEM
             </button>
             
             <div style="margin-top: 30px; padding: 25px; background: var(--bg-glass); border-radius: 18px; font-size: 14px; color: var(--text-secondary); border: var(--glass-border);">
@@ -1137,7 +1137,7 @@
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>
         <h3 class="loading-text">ACCESSING VEHICLE DATA</h3>
-        <p class="loading-status" id="loadingStatus">Establishing connection to mission control...</p>
+        <p class="loading-status" id="loadingStatus">Establishing connection to Infants control...</p>
     </div>
 
     <!-- Speed Indicator -->
@@ -1351,7 +1351,7 @@
     </div>
 
     <!-- Enhanced Floating Elements -->
-    <button class="floating-refresh" onclick="refreshData()" title="Refresh Mission Control">
+    <button class="floating-refresh" onclick="refreshData()" title="Refresh Infants Control">
         <i class="fas fa-sync-alt"></i>
     </button>
 
@@ -1411,7 +1411,7 @@
                 const sheetId = document.getElementById('sheetId').value.trim();
                 
                 if (!apiKey || !sheetId) {
-                    this.showError('🚨 API Key and Sheet ID required for mission control');
+                    this.showError('🚨 API Key and Sheet ID required for Infants');
                     return;
                 }
                 
@@ -1442,7 +1442,7 @@
             // Enhanced Google Sheets API
             async fetchSheetData() {
                 if (!this.apiKey || !this.sheetId) {
-                    throw new Error('🚨 Mission control credentials required');
+                    throw new Error('🚨 INFANTS credentials required');
                 }
                 
                 try {
@@ -1468,7 +1468,7 @@
                         .sort((a, b) => a.properties.index - b.properties.index);
                     
                     if (dailySheets.length === 0) {
-                        throw new Error('🚨 No daily tabs detected in mission database');
+                        throw new Error('🚨 No daily tabs detected in Infants database');
                     }
                     
                     // Fetch ALL daily tabs
@@ -1484,7 +1484,7 @@
                     
                     if (!response.ok) {
                         const errorData = await response.json();
-                        throw new Error(`🚨 Mission control error: ${errorData.error?.message || response.statusText}`);
+                        throw new Error(`🚨 Infants control error: ${errorData.error?.message || response.statusText}`);
                     }
                     
                     const data = await response.json();
@@ -3287,3 +3287,4 @@
     </script>
 </body>
 </html>
+

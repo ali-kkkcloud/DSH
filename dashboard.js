@@ -408,7 +408,12 @@ class VehicleDashboard {
                     console.log(`⚠️ Skipping header row ${i}: ${vehicleNumber}`);
                     continue;
                 }
-                
+                // ADD THIS LOCATION FILTERING HERE 👇
+                const locationNames = ['bangalore', 'chennai', 'devanhalli', 'echanahalli', 'kolar', 'krishnagiri'];
+                if (locationNames.includes(vehicleNumber.toLowerCase())) {
+                    console.log(`⚠️ Skipping location name: ${vehicleNumber}`);
+                    continue;
+                }
                 const formattedDate = formatDate(date);
                 const month = getMonth(sheetName, date.toString());
                 
@@ -2124,3 +2129,4 @@ function exportGSCityData(format) {
 }
 
 console.log('🚀 Complete Vehicle Dashboard JavaScript Loaded - All Original Features Restored!');
+

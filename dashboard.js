@@ -408,7 +408,7 @@ class VehicleDashboard {
                     console.log(`⚠️ Skipping header row ${i}: ${vehicleNumber}`);
                     continue;
                 }
-                // ADD THIS LOCATION FILTERING HERE 👇
+                // 🚨 FIXED: City names filtering - consistent across all functions
                 const locationNames = ['bangalore', 'chennai', 'devanhalli', 'echanahalli', 'kolar', 'krishnagiri'];
                 if (locationNames.includes(vehicleNumber.toLowerCase())) {
                     console.log(`⚠️ Skipping location name: ${vehicleNumber}`);
@@ -810,22 +810,17 @@ class VehicleDashboard {
             };
         });
         
-        // 🚨 FIXED: Calculate total unique vehicles with city name filtering
+        // Calculate total unique vehicles (exact same logic as .gs script)
         const allVehicles = new Set();
-        const locationNames = ['bangalore', 'chennai', 'devanhalli', 'echanahalli', 'kolar', 'krishnagiri'];
-        
         Object.keys(monthlyData).forEach(function(month) {
             monthlyData[month].forEach(function(vehicle) {
-                // Skip city names that might have been added as vehicle numbers
-                if (!locationNames.includes(vehicle.toLowerCase())) {
-                    allVehicles.add(vehicle);
-                }
+                allVehicles.add(vehicle);
             });
         });
         
         let displayDate = latestDate === 'Current' ? 'Recent Data' : latestDate;
         
-        console.log(`🔧 Total unique vehicles after city filter: ${allVehicles.size}`);
+        console.log(`🔧 Total unique vehicles: ${allVehicles.size}`);
         
         return {
             monthlyCounts: monthlyCounts,

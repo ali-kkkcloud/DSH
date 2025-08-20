@@ -810,15 +810,22 @@ class VehicleDashboard {
             };
         });
         
-        // Calculate total unique vehicles (exact same logic as .gs script)
+        // 🚨 FIXED: Calculate total unique vehicles with city name filtering
         const allVehicles = new Set();
+        const locationNames = ['bangalore', 'chennai', 'devanhalli', 'echanahalli', 'kolar', 'krishnagiri'];
+        
         Object.keys(monthlyData).forEach(function(month) {
             monthlyData[month].forEach(function(vehicle) {
-                allVehicles.add(vehicle);
+                // Skip city names that might have been added as vehicle numbers
+                if (!locationNames.includes(vehicle.toLowerCase())) {
+                    allVehicles.add(vehicle);
+                }
             });
         });
         
         let displayDate = latestDate === 'Current' ? 'Recent Data' : latestDate;
+        
+        console.log(`🔧 Total unique vehicles after city filter: ${allVehicles.size}`);
         
         return {
             monthlyCounts: monthlyCounts,
@@ -2129,4 +2136,3 @@ function exportGSCityData(format) {
 }
 
 console.log('🚀 Complete Vehicle Dashboard JavaScript Loaded - All Original Features Restored!');
-

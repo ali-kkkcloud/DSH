@@ -2927,6 +2927,519 @@
                 document.getElementById('locationNetworkContainer').innerHTML = content;
             }
             
+            // Filter functions for alignment analysis
+            updateAlignmentAnalysisByMonth() {
+                this.applyAlignmentFilters();
+            }
+            
+            updateAlignmentAnalysisByLocation() {
+                this.applyAlignmentFilters();
+            }
+            
+            updateAlignmentAnalysisByClient() {
+                this.applyAlignmentFilters();
+            }
+            
+            updateAlignmentAnalysisByVehicle() {
+                this.applyAlignmentFilters();
+            }
+
+            applyAlignmentFilters() {
+                if (!this.cache.mainData) return;
+
+                const monthFilter = document.getElementById('monthFilter')?.value || 'all';
+                const locationFilter = document.getElementById('locationFilter')?.value || 'all';
+                const clientFilter = document.getElementById('clientFilter')?.value || 'all';
+                const vehicleSearch = document.getElementById('vehicleSearchFilter')?.value.toLowerCase() || '';
+
+                let filteredData = {};
+                const originalData = this.cache.mainData.alignmentTimelines || {};
+
+                Object.keys(originalData).forEach(vehicleNumber => {
+                    const timeline = originalData[vehicleNumber];
+                    
+                    // Filter by vehicle search
+                    if (vehicleSearch && !vehicleNumber.toLowerCase().includes(vehicleSearch)) {
+                        return;
+                    }
+
+                    let filteredTimeline = timeline;
+
+                    // Filter by month
+                    if (monthFilter !== 'all') {
+                        filteredTimeline = filteredTimeline.filter(entry => entry.month === monthFilter);
+                    }
+
+                    // Filter by location
+                    if (locationFilter !== 'all') {
+                        filteredTimeline = filteredTimeline.filter(entry => entry.location === locationFilter);
+                    }
+
+                    // Filter by client
+                    if (clientFilter !== 'all') {
+                        filteredTimeline = filteredTimeline.filter(entry => entry.client === clientFilter);
+                    }
+
+                    if (filteredTimeline.length > 0) {
+                        filteredData[vehicleNumber] = filteredTimeline;
+                    }
+                });
+
+                this.filteredAlignmentData = filteredData;
+                this.currentPage = 1; // Reset to first page
+                this.updateAlignmentDisplay();
+            }
+
+            showVehicleTimeline(vehicleNumber) {
+                if (!this.filteredAlignmentData || !this.filteredAlignmentData[vehicleNumber]) {
+                    this.showModal(`🚗 Vehicle: ${vehicleNumber}`, '<p style="color: var(--text-primary);">No timeline data available for this vehicle.</p>');
+                    return;
+                }
+                
+                const timeline = this.filteredAlignmentData[vehicleNumber];
+                const latestEntry = timeline[timeline.length - 1];
+                
+                // Generate timeline with detailed status changes
+                const timelineHtml = this.generateDetailedTimeline(timeline);
+                
+                const modalContent = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 35px;">
+                        <div style="background: var(--bg-glass); padding: 25px; border-radius: 18px; text-align: center;">
+                            <i class="fas fa-building" style="font-size: 1.8rem; color: var(--secondary-neon); margin-bottom: 12px;"></i>
+                            <div style="font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">CLIENT</div>
+                            <div style="color: var(--secondary-neon); font-size: 1.2rem; font-weight: 700;">${latestEntry.client}</div>
+                        </div>
+                        <div style="background: var(--bg-glass); padding: 25px; border-radius: 18px; text-align: center;">
+                            <i class="fas fa-map-marker-alt" style="font-size: 1.8rem; color: var(--accent-blue); margin-bottom: 12px;"></i>
+                            <div style="font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">LOCATION</div>
+                            <div style="color: var(--accent-blue); font-size: 1.2rem; font-weight: 700;">${latestEntry.location}</div>
+                        </div>
+                        <div style="background: var(--bg-glass); padding: 25px; border-radius: 18px; text-align: center;">
+                            <i class="fas fa-crosshairs" style="font-size: 1.8rem; color: ${latestEntry.status === 'Alligned' ? 'var(--accent-green)' : 'var(--accent-red)'}; margin-bottom: 12px;"></i>
+                            <div style="font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">CURRENT STATUS</div>
+                            <div style="color: ${latestEntry.status === 'Alligned' ? 'var(--accent-green)' : 'var(--accent-red)'}; font-size: 1.2rem; font-weight: 700;">${latestEntry.status}</div>
+                        </div>
+                        <div style="background: var(--bg-glass); padding: 25px; border-radius: 18px; text-align: center;">
+                            <i class="fas fa-calendar" style="font-size: 1.8rem; color: var(--accent-yellow); margin-bottom: 12px;"></i>
+                            <div style="font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">CHANGES</div>
+                            <div style="color: var(--accent-yellow); font-size: 1.2rem; font-weight: 700;">${timeline.length} Events</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--bg-glass); padding: 30px; border-radius: 18px; border: var(--glass-border);">
+                        <h4 style="color: var(--primary-neon); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; font-size: 1.4rem;">
+                            <i class="fas fa-timeline"></i> DETAILED ALIGNMENT TIMELINE
+                        </h4>
+                        <div style="max-height: 400px; overflow-y: auto; padding-right: 15px;">
+                            ${timelineHtml}
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <button onclick="dashboard.closeModal()" style="background: var(--gradient-primary); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem;">
+                            <i class="fas fa-check"></i> CLOSE
+                        </button>
+                    </div>
+                `;
+                
+                this.showModal(`🚗 Vehicle Timeline: ${vehicleNumber}`, modalContent);
+            }
+
+            generateDetailedTimeline(timeline) {
+                if (!timeline || timeline.length === 0) {
+                    return '<p style="color: var(--text-secondary); text-align: center; padding: 25px;">No alignment changes recorded</p>';
+                }
+
+                // Group consecutive same statuses into periods
+                const periods = [];
+                let currentPeriod = null;
+
+                timeline.forEach(entry => {
+                    if (!currentPeriod || currentPeriod.status !== entry.status) {
+                        if (currentPeriod) {
+                            periods.push(currentPeriod);
+                        }
+                        currentPeriod = {
+                            status: entry.status,
+                            startDate: entry.date,
+                            endDate: entry.date,
+                            month: entry.month,
+                            remarks: entry.remarks
+                        };
+                    } else {
+                        currentPeriod.endDate = entry.date;
+                    }
+                });
+
+                if (currentPeriod) {
+                    periods.push(currentPeriod);
+                }
+
+                return periods.map((period, index) => {
+                    const isAligned = period.status === 'Alligned';
+                    const dotColor = isAligned ? 'var(--accent-green)' : 'var(--accent-red)';
+                    const statusColor = isAligned ? 'var(--accent-green)' : 'var(--accent-red)';
+                    
+                    const dateRange = period.startDate === period.endDate ? 
+                        period.startDate : 
+                        `${period.startDate} to ${period.endDate}`;
+
+                    return `
+                        <div style="display: flex; align-items: center; margin-bottom: 20px; position: relative;">
+                            <div style="width: 16px; height: 16px; border-radius: 50%; margin-right: 20px; z-index: 1; box-shadow: 0 0 15px currentColor; background: ${dotColor};"></div>
+                            ${index < periods.length - 1 ? '<div style="position: absolute; left: 7px; top: 16px; width: 2px; height: 30px; background: rgba(255, 255, 255, 0.2);"></div>' : ''}
+                            <div style="flex: 1; background: var(--bg-darker); padding: 15px 20px; border-radius: 12px; border: var(--glass-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="font-weight: 700; font-size: 1rem; margin-bottom: 5px; color: ${statusColor};">
+                                        ${period.status.toUpperCase()}
+                                    </strong>
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem; background: var(--bg-glass); padding: 4px 10px; border-radius: 8px; display: inline-block;">
+                                        📅 ${dateRange}
+                                    </span>
+                                </div>
+                                <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                                    Month: ${period.month}
+                                </div>
+                                ${period.remarks ? `<div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px; font-style: italic;">${period.remarks}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Executive Summary Interactive Functions
+            showMonthlyData(month, type) {
+                if (!this.cache.mainData || !this.cache.mainData.monthlyBreakdown[month]) return;
+                
+                const monthData = this.cache.mainData.monthlyBreakdown[month];
+                const vehicles = monthData.vehicles || [];
+                
+                if (!vehicles.length) {
+                    this.showModal(`${month} Data`, '<p style="color: var(--text-primary);">No vehicles found for this month.</p>');
+                    return;
+                }
+                
+                const html = `
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin: 25px 0;">
+                        <div style="background: var(--gradient-success); padding: 25px; border-radius: 18px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 900; color: white;">${vehicles.filter(v => v.workingStatus === 'Active').length}</div>
+                            <div style="font-size: 1rem; color: white; font-weight: 700;">ACTIVE</div>
+                        </div>
+                        <div style="background: var(--gradient-info); padding: 25px; border-radius: 18px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 900; color: white;">${vehicles.filter(v => v.workingStatus !== 'Active' && !v.workingStatus.includes('Offlline') && !v.workingStatus.includes('Sold')).length}</div>
+                            <div style="font-size: 1rem; color: white; font-weight: 700;">NOT ACTIVE</div>
+                        </div>
+                        <div style="background: var(--gradient-danger); padding: 25px; border-radius: 18px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 900; color: white;">${vehicles.filter(v => v.workingStatus.includes('Offlline')).length}</div>
+                            <div style="font-size: 1rem; color: white; font-weight: 700;">OFFLINE</div>
+                        </div>
+                        <div style="background: var(--gradient-sold); padding: 25px; border-radius: 18px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 900; color: white;">${vehicles.filter(v => v.workingStatus.includes('Sold')).length}</div>
+                            <div style="font-size: 1rem; color: white; font-weight: 700;">SOLD</div>
+                        </div>
+                        <div style="background: var(--gradient-warning); padding: 25px; border-radius: 18px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 900; color: white;">${vehicles.filter(v => v.alignmentStatus === 'Misalligned').length}</div>
+                            <div style="font-size: 1rem; color: white; font-weight: 700;">MISALIGNED</div>
+                        </div>
+                    </div>
+                    <div class="glass-container" style="padding: 0; border-radius: 18px;">
+                        <table style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-rocket"></i> VEHICLE</th>
+                                    <th><i class="fas fa-building"></i> CLIENT</th>
+                                    <th><i class="fas fa-map-marker-alt"></i> LOCATION</th>
+                                    <th><i class="fas fa-signal"></i> STATUS</th>
+                                    <th><i class="fas fa-crosshairs"></i> ALIGNMENT</th>
+                                    <th><i class="fas fa-calendar"></i> DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${vehicles.map(vehicle => {
+                                    let workingStatusClass = 'status-badge status-offline';
+                                    if (vehicle.workingStatus === 'Active') workingStatusClass = 'status-badge status-active';
+                                    else if (vehicle.workingStatus.includes('Sold')) workingStatusClass = 'status-badge status-sold';
+                                    
+                                    const alignmentStatusClass = vehicle.alignmentStatus === 'Alligned' ? 'status-badge status-aligned' : 'status-badge status-misaligned';
+                                    
+                                    return `
+                                        <tr class="fade-in-row">
+                                            <td style="color: var(--text-primary); font-weight: 800;">${vehicle.vehicle}</td>
+                                            <td style="color: var(--text-primary);">${vehicle.client}</td>
+                                            <td style="color: var(--text-primary);">${vehicle.location}</td>
+                                            <td><span class="${workingStatusClass}">${vehicle.workingStatus}</span></td>
+                                            <td><span class="${alignmentStatusClass}">${vehicle.alignmentStatus}</span></td>
+                                            <td style="color: var(--text-primary);">${vehicle.date}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                this.showModal(`${month} - All Vehicles (${vehicles.length})`, html);
+            }
+
+            showMonthlyVehicles(month, type) {
+                if (!this.cache.mainData || !this.cache.mainData.monthlyBreakdown[month]) return;
+                
+                const monthData = this.cache.mainData.monthlyBreakdown[month];
+                const allVehicles = monthData.vehicles || [];
+                let vehicles = [];
+                let title = '';
+                
+                switch (type) {
+                    case 'active':
+                        vehicles = allVehicles.filter(v => v.workingStatus === 'Active');
+                        title = `${month} - Active Vehicles (${vehicles.length})`;
+                        break;
+                    case 'notactive':
+                        vehicles = allVehicles.filter(v => 
+                            v.workingStatus !== 'Active' && 
+                            !v.workingStatus.includes('Offlline') && 
+                            !v.workingStatus.includes('Sold'));
+                        title = `${month} - Not Active Vehicles (${vehicles.length})`;
+                        break;
+                    case 'offline':
+                        vehicles = allVehicles.filter(v => v.workingStatus.includes('Offlline'));
+                        title = `${month} - Offline Vehicles (${vehicles.length})`;
+                        break;
+                    case 'sold':
+                        vehicles = allVehicles.filter(v => v.workingStatus.includes('Sold'));
+                        title = `${month} - Sold Vehicles (${vehicles.length})`;
+                        break;
+                    case 'alignment':
+                        vehicles = allVehicles.filter(v => v.alignmentStatus === 'Misalligned');
+                        title = `${month} - Misaligned Vehicles (${vehicles.length})`;
+                        break;
+                }
+                
+                if (!vehicles.length) {
+                    this.showModal(title, '<p style="color: var(--text-primary);">No vehicles found in this category.</p>');
+                    return;
+                }
+                
+                this.showVehicleModal(title, vehicles);
+            }
+
+            showOverallTotals() {
+                const data = this.cache.mainData;
+                const stats = data.stats || {};
+                
+                const html = `
+                    <div style="background: var(--gradient-primary); padding: 40px; border-radius: 30px; text-align: center; margin-bottom: 40px;">
+                        <h3 style="color: white; font-size: 2.5rem; font-weight: 900; margin-bottom: 15px;">📊 OVERALL FLEET TOTALS</h3>
+                        <p style="color: white; opacity: 0.95; font-size: 1.2rem;">Complete fleet breakdown as of ${data.latestDate}</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 30px;">
+                        <div style="background: var(--gradient-primary); padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;" onclick="dashboard.showVehicleDetails('total')">
+                            <div style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 10px;">${stats.totalVehicles}</div>
+                            <div style="color: white; font-size: 1.1rem; font-weight: 700;">🚗 Total Vehicles</div>
+                        </div>
+                        <div style="background: var(--gradient-success); padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;" onclick="dashboard.showVehicleDetails('active')">
+                            <div style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 10px;">${stats.activeVehicles}</div>
+                            <div style="color: white; font-size: 1.1rem; font-weight: 700;">✅ Active Vehicles</div>
+                        </div>
+                        <div style="background: var(--gradient-info); padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;" onclick="dashboard.showVehicleDetails('notactive')">
+                            <div style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 10px;">${stats.notActiveVehicles}</div>
+                            <div style="color: white; font-size: 1.1rem; font-weight: 700;">⏸️ Not Active</div>
+                        </div>
+                        <div style="background: var(--gradient-danger); padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;" onclick="dashboard.showVehicleDetails('offline')">
+                            <div style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 10px;">${stats.offlineVehicles}</div>
+                            <div style="color: white; font-size: 1.1rem; font-weight: 700;">📡 Offline</div>
+                        </div>
+                        <div style="background: var(--gradient-sold); padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;" onclick="dashboard.showVehicleDetails('sold')">
+                            <div style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 10px;">${stats.soldVehicles}</div>
+                            <div style="color: white; font-size: 1.1rem; font-weight: 700;">💰 Sold</div>
+                        </div>
+                        <div style="background: var(--gradient-warning); padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;" onclick="dashboard.showVehicleDetails('misaligned')">
+                            <div style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 10px;">${stats.misalignedVehicles}</div>
+                            <div style="color: white; font-size: 1.1rem; font-weight: 700;">⚠️ Misaligned</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--bg-glass); padding: 30px; border-radius: 25px; border: var(--glass-border);">
+                        <h4 style="color: var(--primary-neon); margin-bottom: 20px;">📈 Performance Metrics</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                            <div style="text-align: center; padding: 20px; background: var(--bg-darker); border-radius: 15px;">
+                                <div style="font-size: 2rem; font-weight: 900; color: var(--accent-green);">${stats.healthScore}%</div>
+                                <div style="color: var(--text-secondary); font-weight: 600;">Fleet Health</div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; background: var(--bg-darker); border-radius: 15px;">
+                                <div style="font-size: 2rem; font-weight: 900; color: var(--primary-neon);">${stats.totalClients}</div>
+                                <div style="color: var(--text-secondary); font-weight: 600;">Active Clients</div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; background: var(--bg-darker); border-radius: 15px;">
+                                <div style="font-size: 2rem; font-weight: 900; color: var(--accent-blue);">${stats.totalLocations}</div>
+                                <div style="color: var(--text-secondary); font-weight: 600;">Locations</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                this.showModal('Overall Fleet Totals', html);
+            }
+
+            showAllClients() {
+                if (!this.cache.mainData || !this.cache.mainData.clientAnalysis) return;
+                
+                const clientAnalysis = this.cache.mainData.clientAnalysis;
+                const clients = Object.keys(clientAnalysis).sort();
+                
+                if (!clients.length) {
+                    this.showModal('All Clients', '<p style="color: var(--text-primary);">No clients found.</p>');
+                    return;
+                }
+                
+                const tableHtml = `
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <div style="background: var(--gradient-success); color: white; padding: 15px; border-radius: 10px; display: inline-block;">
+                            <strong>Total Clients: ${clients.length}</strong>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>S.No</th><th>Client Name</th><th>Total Vehicles</th><th>Active</th><th>Offline</th><th>Sold</th><th>Aligned</th><th>Misaligned</th></tr>
+                        </thead>
+                        <tbody>
+                            ${clients.map((clientName, index) => {
+                                const vehicles = clientAnalysis[clientName];
+                                const activeCount = vehicles.filter(v => v.workingStatus === 'Active').length;
+                                const offlineCount = vehicles.filter(v => v.workingStatus.includes('Offlline')).length;
+                                const soldCount = vehicles.filter(v => v.workingStatus.includes('Sold')).length;
+                                const alignedCount = vehicles.filter(v => v.alignmentStatus === 'Alligned').length;
+                                const misalignedCount = vehicles.filter(v => v.alignmentStatus === 'Misalligned').length;
+                                
+                                return `
+                                    <tr onclick="dashboard.showClientDetails('${clientName}')" style="cursor: pointer;" onmouseover="this.style.background='var(--bg-glass)'" onmouseout="this.style.background=''">
+                                        <td style="color: var(--text-primary); font-weight: 600;">${index + 1}</td>
+                                        <td style="color: var(--text-primary); font-weight: 700;">${clientName}</td>
+                                        <td style="color: var(--text-primary); font-weight: 600;">${vehicles.length}</td>
+                                        <td><span class="status-active">${activeCount}</span></td>
+                                        <td><span class="status-offline">${offlineCount}</span></td>
+                                        <td><span class="status-sold">${soldCount}</span></td>
+                                        <td><span class="status-aligned">${alignedCount}</span></td>
+                                        <td><span class="status-misaligned">${misalignedCount}</span></td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                this.showModal(`All Clients (${clients.length})`, tableHtml);
+            }
+
+            showAllLocations() {
+                if (!this.cache.mainData || !this.cache.mainData.cityAnalysis) return;
+                
+                const cityAnalysis = this.cache.mainData.cityAnalysis;
+                const locations = Object.keys(cityAnalysis).sort();
+                
+                if (!locations.length) {
+                    this.showModal('All Locations', '<p style="color: var(--text-primary);">No locations found.</p>');
+                    return;
+                }
+                
+                const tableHtml = `
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <div style="background: var(--gradient-info); color: white; padding: 15px; border-radius: 10px; display: inline-block;">
+                            <strong>Total Locations: ${locations.length}</strong>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>S.No</th><th>Location Name</th><th>Total Vehicles</th><th>Active</th><th>Offline</th><th>Sold</th><th>Aligned</th><th>Misaligned</th></tr>
+                        </thead>
+                        <tbody>
+                            ${locations.map((locationName, index) => {
+                                const vehicles = cityAnalysis[locationName];
+                                const activeCount = vehicles.filter(v => v.workingStatus === 'Active').length;
+                                const offlineCount = vehicles.filter(v => v.workingStatus.includes('Offlline')).length;
+                                const soldCount = vehicles.filter(v => v.workingStatus.includes('Sold')).length;
+                                const alignedCount = vehicles.filter(v => v.alignmentStatus === 'Alligned').length;
+                                const misalignedCount = vehicles.filter(v => v.alignmentStatus === 'Misalligned').length;
+                                
+                                return `
+                                    <tr onclick="dashboard.showLocationDetails('${locationName}')" style="cursor: pointer;" onmouseover="this.style.background='var(--bg-glass)'" onmouseout="this.style.background=''">
+                                        <td style="color: var(--text-primary); font-weight: 600;">${index + 1}</td>
+                                        <td style="color: var(--text-primary); font-weight: 700;">${locationName}</td>
+                                        <td style="color: var(--text-primary); font-weight: 600;">${vehicles.length}</td>
+                                        <td><span class="status-active">${activeCount}</span></td>
+                                        <td><span class="status-offline">${offlineCount}</span></td>
+                                        <td><span class="status-sold">${soldCount}</span></td>
+                                        <td><span class="status-aligned">${alignedCount}</span></td>
+                                        <td><span class="status-misaligned">${misalignedCount}</span></td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                this.showModal(`All Locations (${locations.length})`, tableHtml);
+            }
+
+            showClientDetails(clientName) {
+                if (!this.cache.mainData || !this.cache.mainData.clientAnalysis[clientName]) return;
+                
+                const vehicles = this.cache.mainData.clientAnalysis[clientName];
+                const title = `🏢 Client: ${clientName} (${vehicles.length} units)`;
+                
+                this.showVehicleModal(title, vehicles);
+            }
+            
+            showLocationDetails(locationName) {
+                if (!this.cache.mainData || !this.cache.mainData.cityAnalysis[locationName]) return;
+                
+                const vehicles = this.cache.mainData.cityAnalysis[locationName];
+                const title = `📍 Location: ${locationName} (${vehicles.length} units)`;
+                
+                this.showVehicleModal(title, vehicles);
+            }
+
+            showPlaceholderContent(tabIndex) {
+                const tabContent = document.querySelector(`#tab${tabIndex}`);
+                if (tabContent) {
+                    const placeholderContent = `
+                        <div style="text-align: center; padding: 100px 50px; color: var(--text-secondary);">
+                            <i class="fas fa-satellite-dish" style="font-size: 5rem; margin-bottom: 25px; color: var(--primary-neon); opacity: 0.6;"></i>
+                            <h3 style="color: var(--primary-neon); margin-bottom: 20px; font-size: 1.8rem;">🚀 SYSTEM MODULE</h3>
+                            <p style="font-size: 1.2rem; margin-bottom: 15px;">This advanced module is ready for deployment</p>
+                            <p style="font-size: 1rem; opacity: 0.8;">Configure API connection and load vehicle data first</p>
+                            <div style="margin-top: 35px;">
+                                <button class="control-btn" onclick="dashboard.refreshData()" style="padding: 18px 35px; font-size: 1rem;">
+                                    <i class="fas fa-rocket"></i> <span>ACTIVATE MODULE</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const container = tabContent.querySelector('.operations-panel');
+                    if (container) {
+                        container.innerHTML = `
+                            <h3 class="panel-title">
+                                <i class="fas fa-satellite"></i> ${this.getTabTitle(tabIndex)}
+                            </h3>
+                            ${placeholderContent}
+                        `;
+                    }
+                }
+            }
+
+            getTabTitle(tabIndex) {
+                const titles = [
+                    'FLEET OVERVIEW',
+                    'EXECUTIVE SUMMARY',
+                    'ALIGNMENT ANALYSIS',
+                    'CLIENT OPERATIONS',
+                    'LOCATION NETWORK'
+                ];
+                return titles[tabIndex] || 'SYSTEM MODULE';
+            }
+
             // Modal functions
             showVehicleDetails(category) {
                 if (!this.cache.mainData) return;
@@ -3211,12 +3724,46 @@
             dashboard.updateAlignmentAnalysisByVehicle();
         }
 
+        // New executive summary interactive functions
+        function showMonthlyData(month, type) {
+            dashboard.showMonthlyData(month, type);
+        }
+
+        function showMonthlyVehicles(month, type) {
+            dashboard.showMonthlyVehicles(month, type);
+        }
+
+        function showOverallTotals() {
+            dashboard.showOverallTotals();
+        }
+
+        function showAllClients() {
+            dashboard.showAllClients();
+        }
+
+        function showAllLocations() {
+            dashboard.showAllLocations();
+        }
+
+        function showClientDetails(clientName) {
+            dashboard.showClientDetails(clientName);
+        }
+
+        function showLocationDetails(locationName) {
+            dashboard.showLocationDetails(locationName);
+        }
+
+        function showVehicleTimeline(vehicleNumber) {
+            dashboard.showVehicleTimeline(vehicleNumber);
+        }
+
         console.log('🚀 INFANTS Enhanced Vehicle Management System - CITY FILTERING FIXED!');
         console.log('🚫 CITY FILTER: Enhanced filtering now properly removes all city names from vehicle count');
         console.log('✅ VEHICLE VALIDATION: Strongest possible city name detection and removal');
         console.log('📊 ACCURATE COUNTS: July month should now show proper vehicle counts without city names');
         console.log('🎯 COMPREHENSIVE FILTERING: All variants of city names are now blocked');
         console.log('💎 Enhanced data processing with STRENGTHENED city filtering');
+        console.log('🔧 ALL MISSING FUNCTIONS: Executive summary, alignment analysis, modals - ALL RESTORED');
     </script>
 </body>
 </html>
